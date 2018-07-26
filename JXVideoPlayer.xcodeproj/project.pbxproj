@@ -13,9 +13,15 @@
 		786A155621095F9100579785 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 786A155521095F9100579785 /* Assets.xcassets */; };
 		786A155921095F9100579785 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 786A155721095F9100579785 /* LaunchScreen.storyboard */; };
 		786A155C21095F9100579785 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A155B21095F9100579785 /* main.m */; };
+		786A15652109631000579785 /* JXVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A15642109631000579785 /* JXVideoView.m */; };
+		786A156E210971E400579785 /* JXVideoView+Time.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A156D210971E400579785 /* JXVideoView+Time.m */; };
+		786A1571210971F100579785 /* JXVideoView+CoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1570210971F100579785 /* JXVideoView+CoverView.m */; };
+		786A1574210971FE00579785 /* JXVideoView+OperationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1573210971FE00579785 /* JXVideoView+OperationButton.m */; };
+		78AEA3BC36AA359BA89B6DEF /* libPods-JXVideoPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		34141D2F29534EB5DA1EA243 /* Pods-JXVideoPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JXVideoPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-JXVideoPlayer/Pods-JXVideoPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		786A154921095F9000579785 /* JXVideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JXVideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		786A154C21095F9000579785 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		786A154D21095F9000579785 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -26,6 +32,18 @@
 		786A155821095F9100579785 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		786A155A21095F9100579785 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		786A155B21095F9100579785 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		786A15632109631000579785 /* JXVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JXVideoView.h; sourceTree = "<group>"; };
+		786A15642109631000579785 /* JXVideoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JXVideoView.m; sourceTree = "<group>"; };
+		786A1566210963AB00579785 /* JXVideoPlayerDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JXVideoPlayerDefines.h; sourceTree = "<group>"; };
+		786A156C210971E400579785 /* JXVideoView+Time.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JXVideoView+Time.h"; sourceTree = "<group>"; };
+		786A156D210971E400579785 /* JXVideoView+Time.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JXVideoView+Time.m"; sourceTree = "<group>"; };
+		786A156F210971F100579785 /* JXVideoView+CoverView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JXVideoView+CoverView.h"; sourceTree = "<group>"; };
+		786A1570210971F100579785 /* JXVideoView+CoverView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JXVideoView+CoverView.m"; sourceTree = "<group>"; };
+		786A1572210971FE00579785 /* JXVideoView+OperationButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JXVideoView+OperationButton.h"; sourceTree = "<group>"; };
+		786A1573210971FE00579785 /* JXVideoView+OperationButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JXVideoView+OperationButton.m"; sourceTree = "<group>"; };
+		786A15752109CFBC00579785 /* JXVideoPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JXVideoPlayer.h; sourceTree = "<group>"; };
+		96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JXVideoPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4D4E046BC53C66A70151BBF /* Pods-JXVideoPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JXVideoPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JXVideoPlayer/Pods-JXVideoPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,17 +51,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78AEA3BC36AA359BA89B6DEF /* libPods-JXVideoPlayer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E43D5B371D50D004A5695F0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		412003CF97C19947BE0E7663 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A4D4E046BC53C66A70151BBF /* Pods-JXVideoPlayer.debug.xcconfig */,
+				34141D2F29534EB5DA1EA243 /* Pods-JXVideoPlayer.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		786A154021095F9000579785 = {
 			isa = PBXGroup;
 			children = (
 				786A154B21095F9000579785 /* JXVideoPlayer */,
 				786A154A21095F9000579785 /* Products */,
+				412003CF97C19947BE0E7663 /* Pods */,
+				0E43D5B371D50D004A5695F0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +96,7 @@
 		786A154B21095F9000579785 /* JXVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				786A15622109614100579785 /* JXVideoPlayer */,
 				786A154C21095F9000579785 /* AppDelegate.h */,
 				786A154D21095F9000579785 /* AppDelegate.m */,
 				786A154F21095F9000579785 /* ViewController.h */,
@@ -71,6 +110,63 @@
 			path = JXVideoPlayer;
 			sourceTree = "<group>";
 		};
+		786A15622109614100579785 /* JXVideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				786A15672109718600579785 /* Category */,
+				786A1566210963AB00579785 /* JXVideoPlayerDefines.h */,
+				786A15632109631000579785 /* JXVideoView.h */,
+				786A15642109631000579785 /* JXVideoView.m */,
+				786A15752109CFBC00579785 /* JXVideoPlayer.h */,
+			);
+			path = JXVideoPlayer;
+			sourceTree = "<group>";
+		};
+		786A15672109718600579785 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				786A15682109719300579785 /* JXVideoView */,
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
+		786A15682109719300579785 /* JXVideoView */ = {
+			isa = PBXGroup;
+			children = (
+				786A156B210971BB00579785 /* OperationButton */,
+				786A156A210971AA00579785 /* CoverView */,
+				786A1569210971A300579785 /* Time */,
+			);
+			path = JXVideoView;
+			sourceTree = "<group>";
+		};
+		786A1569210971A300579785 /* Time */ = {
+			isa = PBXGroup;
+			children = (
+				786A156C210971E400579785 /* JXVideoView+Time.h */,
+				786A156D210971E400579785 /* JXVideoView+Time.m */,
+			);
+			path = Time;
+			sourceTree = "<group>";
+		};
+		786A156A210971AA00579785 /* CoverView */ = {
+			isa = PBXGroup;
+			children = (
+				786A156F210971F100579785 /* JXVideoView+CoverView.h */,
+				786A1570210971F100579785 /* JXVideoView+CoverView.m */,
+			);
+			path = CoverView;
+			sourceTree = "<group>";
+		};
+		786A156B210971BB00579785 /* OperationButton */ = {
+			isa = PBXGroup;
+			children = (
+				786A1572210971FE00579785 /* JXVideoView+OperationButton.h */,
+				786A1573210971FE00579785 /* JXVideoView+OperationButton.m */,
+			);
+			path = OperationButton;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -78,9 +174,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 786A155F21095F9100579785 /* Build configuration list for PBXNativeTarget "JXVideoPlayer" */;
 			buildPhases = (
+				E7CB8064A9B900ABAAD7B1C8 /* [CP] Check Pods Manifest.lock */,
 				786A154521095F9000579785 /* Sources */,
 				786A154621095F9000579785 /* Frameworks */,
 				786A154721095F9000579785 /* Resources */,
+				8B7142C029DE3F2D9D6C558B /* [CP] Embed Pods Frameworks */,
+				F6039B8DD1C101253F9FB811 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -136,12 +235,67 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		8B7142C029DE3F2D9D6C558B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-JXVideoPlayer/Pods-JXVideoPlayer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E7CB8064A9B900ABAAD7B1C8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-JXVideoPlayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F6039B8DD1C101253F9FB811 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-JXVideoPlayer/Pods-JXVideoPlayer-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		786A154521095F9000579785 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				786A15652109631000579785 /* JXVideoView.m in Sources */,
+				786A156E210971E400579785 /* JXVideoView+Time.m in Sources */,
+				786A1574210971FE00579785 /* JXVideoView+OperationButton.m in Sources */,
 				786A155121095F9000579785 /* ViewController.m in Sources */,
+				786A1571210971F100579785 /* JXVideoView+CoverView.m in Sources */,
 				786A155C21095F9100579785 /* main.m in Sources */,
 				786A154E21095F9000579785 /* AppDelegate.m in Sources */,
 			);
@@ -283,10 +437,13 @@
 		};
 		786A156021095F9100579785 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A4D4E046BC53C66A70151BBF /* Pods-JXVideoPlayer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 74MF5V7Z8J;
 				INFOPLIST_FILE = JXVideoPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -299,10 +456,13 @@
 		};
 		786A156121095F9100579785 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 34141D2F29534EB5DA1EA243 /* Pods-JXVideoPlayer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 74MF5V7Z8J;
 				INFOPLIST_FILE = JXVideoPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
