@@ -12,6 +12,7 @@
 #define WeakSelf __weak typeof(self) weakSelf = self;
 #define StrongSelf __strong typeof(weakSelf) strongSelf = weakSelf;
 
+@import CoreMedia;
 @class JXVideoView;
 
 typedef NS_ENUM(NSUInteger, JXVideoViewPrepareStatus) {
@@ -61,8 +62,6 @@ typedef NS_ENUM(NSUInteger, JXVideoViewVideoUrlType) {
 - (void)jx_videoView:(JXVideoView *)videoView didTappedPlayButton:(UIButton *)playButton;
 - (void)jx_videoView:(JXVideoView *)videoView layoutPlayButton:(UIButton *)playButton;
 
-- (void)jx_videoView:(JXVideoView *)videoView didTappedReplayButton:(UIButton *)replayButton;
-- (void)jx_videoView:(JXVideoView *)videoView layoutReplayButton:(UIButton *)replayButton;
 @end
 
 
@@ -71,8 +70,24 @@ typedef NS_ENUM(NSUInteger, JXVideoViewVideoUrlType) {
 @protocol JXVideoViewTimeDelegate <NSObject>
 
 @optional
-- (void)jx_videoView:(JXVideoView *)videoView didFinishedMoveToTime:(NSTimeInterval)time;
+- (void)jx_videoViewDidLoadVideoDuration:(JXVideoView *)videoView;
+- (void)jx_videoView:(JXVideoView *)videoView didFinishedMoveToTime:(CMTime)time;
+- (void)jx_videoView:(JXVideoView *)videoView didPlayToSecond:(CGFloat)second;
 
 @end
+
+/**********************************************************************/
+
+@protocol JXVideoViewFullScreenDelegate
+
+@optional
+- (void)jx_videoViewLayoutSubviewsWhenEnterFullScreen:(JXVideoView *)videoView;
+- (void)jx_videoVidewDidFinishEnterFullScreen:(JXVideoView *)videoView;
+
+- (void)jx_videoViewLayoutSubviewsWhenExitFullScreen:(JXVideoView *)videoView;
+- (void)jx_videoVidewDidFinishExitFullScreen:(JXVideoView *)videoView;
+
+@end
+
 
 #endif /* JXVideoPlayerDefines_h */

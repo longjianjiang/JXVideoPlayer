@@ -40,8 +40,8 @@
 - (void)prepare;
 - (void)play;
 - (void)pause;
-- (void)stop;
 - (void)replay;
+- (void)stopWithReleaseVideo:(BOOL)shouldReleaseVideo;
 
 - (void)refreshUrl;
 

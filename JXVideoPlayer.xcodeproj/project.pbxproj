@@ -17,6 +17,7 @@
 		786A156E210971E400579785 /* JXVideoView+Time.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A156D210971E400579785 /* JXVideoView+Time.m */; };
 		786A1571210971F100579785 /* JXVideoView+CoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1570210971F100579785 /* JXVideoView+CoverView.m */; };
 		786A1574210971FE00579785 /* JXVideoView+OperationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1573210971FE00579785 /* JXVideoView+OperationButton.m */; };
+		786A157B210AB88400579785 /* JXVideoView+FullScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A157A210AB88400579785 /* JXVideoView+FullScreen.m */; };
 		78AEA3BC36AA359BA89B6DEF /* libPods-JXVideoPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,8 @@
 		786A1572210971FE00579785 /* JXVideoView+OperationButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JXVideoView+OperationButton.h"; sourceTree = "<group>"; };
 		786A1573210971FE00579785 /* JXVideoView+OperationButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JXVideoView+OperationButton.m"; sourceTree = "<group>"; };
 		786A15752109CFBC00579785 /* JXVideoPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JXVideoPlayer.h; sourceTree = "<group>"; };
+		786A1579210AB88400579785 /* JXVideoView+FullScreen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JXVideoView+FullScreen.h"; sourceTree = "<group>"; };
+		786A157A210AB88400579785 /* JXVideoView+FullScreen.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JXVideoView+FullScreen.m"; sourceTree = "<group>"; };
 		96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JXVideoPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4D4E046BC53C66A70151BBF /* Pods-JXVideoPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JXVideoPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JXVideoPlayer/Pods-JXVideoPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -113,10 +116,9 @@
 		786A15622109614100579785 /* JXVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				786A15762109DA7900579785 /* Components */,
 				786A15672109718600579785 /* Category */,
 				786A1566210963AB00579785 /* JXVideoPlayerDefines.h */,
-				786A15632109631000579785 /* JXVideoView.h */,
-				786A15642109631000579785 /* JXVideoView.m */,
 				786A15752109CFBC00579785 /* JXVideoPlayer.h */,
 			);
 			path = JXVideoPlayer;
@@ -133,6 +135,7 @@
 		786A15682109719300579785 /* JXVideoView */ = {
 			isa = PBXGroup;
 			children = (
+				786A1578210AB87100579785 /* FullScreen */,
 				786A156B210971BB00579785 /* OperationButton */,
 				786A156A210971AA00579785 /* CoverView */,
 				786A1569210971A300579785 /* Time */,
@@ -165,6 +168,32 @@
 				786A1573210971FE00579785 /* JXVideoView+OperationButton.m */,
 			);
 			path = OperationButton;
+			sourceTree = "<group>";
+		};
+		786A15762109DA7900579785 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				786A15772109DA8C00579785 /* JXVideoView */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		786A15772109DA8C00579785 /* JXVideoView */ = {
+			isa = PBXGroup;
+			children = (
+				786A15632109631000579785 /* JXVideoView.h */,
+				786A15642109631000579785 /* JXVideoView.m */,
+			);
+			path = JXVideoView;
+			sourceTree = "<group>";
+		};
+		786A1578210AB87100579785 /* FullScreen */ = {
+			isa = PBXGroup;
+			children = (
+				786A1579210AB88400579785 /* JXVideoView+FullScreen.h */,
+				786A157A210AB88400579785 /* JXVideoView+FullScreen.m */,
+			);
+			path = FullScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -296,6 +325,7 @@
 				786A1574210971FE00579785 /* JXVideoView+OperationButton.m in Sources */,
 				786A155121095F9000579785 /* ViewController.m in Sources */,
 				786A1571210971F100579785 /* JXVideoView+CoverView.m in Sources */,
+				786A157B210AB88400579785 /* JXVideoView+FullScreen.m in Sources */,
 				786A155C21095F9100579785 /* main.m in Sources */,
 				786A154E21095F9000579785 /* AppDelegate.m in Sources */,
 			);

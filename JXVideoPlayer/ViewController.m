@@ -12,7 +12,7 @@
 
 
 
-@interface ViewController ()<JXVideoViewOperationDelegate>
+@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate>
 
 @property (nonatomic, strong) JXVideoView *videoView;
 
@@ -39,6 +39,12 @@
 - (void)jx_videoViewDidFinishPrepare:(JXVideoView *)videoView {
     NSLog(@"did finish prepare video");
 }
+
+#pragma mark - JXVideoViewTimeDelegate
+- (void)jx_videoView:(JXVideoView *)videoView didPlayToSecond:(CGFloat)second {
+    NSLog(@"current second is %f",second);
+}
+
 #pragma mark - getter and setter
 - (JXVideoView *)videoView {
     if (_videoView == nil) {
@@ -53,6 +59,8 @@
         coverView.textAlignment = NSTextAlignmentCenter;
         coverView.backgroundColor = [UIColor orangeColor];
         _videoView.coverView = coverView;
+        [_videoView setShouldObservePlayTime:YES timeGapToObserve:100];
+        _videoView.timeDelegate = self;
     }
     return _videoView;
 }

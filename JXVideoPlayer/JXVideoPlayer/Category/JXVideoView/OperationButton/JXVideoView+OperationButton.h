@@ -12,7 +12,6 @@
 
 @property (nonatomic, assign) BOOL shouldShowOperationButton;
 @property (nonatomic, strong) UIButton *playButton;
-@property (nonatomic, strong) UIButton *replayButton;
 @property (nonatomic, weak) id<JXVideoViewOperationButtonDelegate> operationButtonDelegate;
 
 - (void)initOperationButton;
@@ -20,8 +19,7 @@
 
 - (void)showPlayButton;
 - (void)hidePlayButton;
-- (void)showReplayButton;
-- (void)hideReplayButton;
+
 - (void)layoutOperationButton;
 
 @end
