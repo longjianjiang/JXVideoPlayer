@@ -30,6 +30,11 @@ typedef NS_ENUM(NSUInteger, JXVideoViewVideoUrlType) {
     JXVideoViewVideoUrlTypeAsset,
 };
 
+typedef NS_ENUM(NSUInteger, JXVideoViewPlayControlDirection) {
+    JXVideoViewPlayControlDirectionMoveForward,
+    JXVideoViewPlayControlDirectionMoveBackward,
+};
+
 /**********************************************************************/
 
 @protocol JXVideoViewOperationDelegate <NSObject>
@@ -86,6 +91,18 @@ typedef NS_ENUM(NSUInteger, JXVideoViewVideoUrlType) {
 
 - (void)jx_videoViewLayoutSubviewsWhenExitFullScreen:(JXVideoView *)videoView;
 - (void)jx_videoVidewDidFinishExitFullScreen:(JXVideoView *)videoView;
+
+@end
+
+/**********************************************************************/
+
+@protocol JXVideoViewPlayControlDelegate <NSObject>
+
+@optional
+
+- (void)jx_videoViewShowPlayControlIndicator:(JXVideoView *)videoView;
+- (void)jx_videoViewHidePlayControlIndicator:(JXVideoView *)videoView;
+- (void)jx_videoView:(JXVideoView *)videoView playControlDidMoveToSecond:(CGFloat)second direction:(JXVideoViewPlayControlDirection)direction;
 
 @end
 

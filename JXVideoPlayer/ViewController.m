@@ -12,7 +12,7 @@
 
 
 
-@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate>
+@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate, JXVideoViewPlayControlDelegate>
 
 @property (nonatomic, strong) JXVideoView *videoView;
 
@@ -45,6 +45,12 @@
     NSLog(@"current second is %f",second);
 }
 
+#pragma mark - JXVideoViewPlayControlDelegate
+- (void)jx_videoView:(JXVideoView *)videoView playControlDidMoveToSecond:(CGFloat)second direction:(JXVideoViewPlayControlDirection)direction {
+    NSLog(@"quick value is %f", second);
+}
+
+
 #pragma mark - getter and setter
 - (JXVideoView *)videoView {
     if (_videoView == nil) {
@@ -61,6 +67,7 @@
         _videoView.coverView = coverView;
         [_videoView setShouldObservePlayTime:YES timeGapToObserve:100];
         _videoView.timeDelegate = self;
+        _videoView.playControlDelegate = self;
     }
     return _videoView;
 }

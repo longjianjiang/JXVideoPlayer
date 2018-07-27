@@ -11,7 +11,7 @@
 #import "JXVideoView+CoverView.h"
 #import "JXVideoView+OperationButton.h"
 #import "JXVideoView+Time.h"
-
+#import "JXVideoView+PlayControlPrivate.h"
 
 NSString * const kJXVideoViewKVOKeyPathPlayerItemStatus = @"player.currentItem.status";
 NSString * const kJXVideoViewKVOKeyPathPlayerItemDuration = @"player.currentItem.duration";
@@ -246,6 +246,8 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
     [self initCoverView];
     [self initOperationButton];
     [self initTime];
+    [self initWithPlayControlGesture];
+    
 }
 
 - (void)dealloc {
