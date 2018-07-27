@@ -42,7 +42,7 @@
 
 #pragma mark - JXVideoViewTimeDelegate
 - (void)jx_videoView:(JXVideoView *)videoView didPlayToSecond:(CGFloat)second {
-    NSLog(@"current second is %f",second);
+//    NSLog(@"current second is %f",second);
 }
 
 #pragma mark - JXVideoViewPlayControlDelegate
@@ -50,6 +50,9 @@
     NSLog(@"quick value is %f", second);
 }
 
+- (void)jx_videoViewBeTapOneTime:(JXVideoView *)videoView {
+    NSLog(@"should show or hide menu");
+}
 
 #pragma mark - getter and setter
 - (JXVideoView *)videoView {

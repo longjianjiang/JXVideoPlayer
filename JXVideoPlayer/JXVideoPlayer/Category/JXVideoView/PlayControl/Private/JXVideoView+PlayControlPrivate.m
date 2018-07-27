@@ -18,17 +18,24 @@
 
 #pragma mark - life cycle
 - (void)initWithPlayControlGesture {
-    [self addGestureRecognizer:self.tapGestureRecognizer];
+    [self addGestureRecognizer:self.oneTapGestureRecognizer];
+    [self addGestureRecognizer:self.twoTapGestureRecognizer];
     [self addGestureRecognizer:self.panGestureRecognizer];
+    // ensure two tap gesture not conflict
+    [self.oneTapGestureRecognizer requireGestureRecognizerToFail:self.twoTapGestureRecognizer];
 }
 
+
 #pragma mark - gesture method
-- (void)didTapVideoView:(UITapGestureRecognizer *)gesture {
-//    [self pause];
-    if (!self.isFullScreen) {
-        [self enterFullScreen];
-    } else {
-        [self exitFullScreen];
+- (void)twoTapGestureFired:(UITapGestureRecognizer *)gesture {
+    if ([self.playControlDelegate respondsToSelector:@selector(jx_videoViewBeTapDoubleTime:)]) {
+        [self.playControlDelegate jx_videoViewBeTapDoubleTime:self];
+    }
+}
+
+- (void)oneTapGestureFired:(UITapGestureRecognizer *)gesture {
+    if ([self.playControlDelegate respondsToSelector:@selector(jx_videoViewBeTapOneTime:)]) {
+        [self.playControlDelegate jx_videoViewBeTapOneTime:self];
     }
 }
 
@@ -76,8 +83,8 @@
             
         case UIGestureRecognizerStateEnded: {
             if (gesture.sliderDirection == JXUIPanGestureSlideDirectionHorizontal) {
-//                [self.player play];
-                 [self moveToSecond:self.secondToMove shouldPlay:YES];
+
+                [self moveToSecond:self.secondToMove shouldPlay:YES];
                 
                 if ([self.playControlDelegate respondsToSelector:@selector(jx_videoViewHidePlayControlIndicator:)]) {
                     [self.playControlDelegate jx_videoViewHidePlayControlIndicator:self];
@@ -125,6 +132,7 @@
     return YES;
 }
 
+
 #pragma mark - getter and setter
 - (CGFloat)secondToMove {
     return [objc_getAssociatedObject(self, @selector(secondToMove)) floatValue];
@@ -134,16 +142,30 @@
     objc_setAssociatedObject(self, @selector(secondToMove), @(secondToMove), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UITapGestureRecognizer *)tapGestureRecognizer {
-    UITapGestureRecognizer *tapGesture = objc_getAssociatedObject(self, @selector(tapGestureRecognizer));
-    if (tapGesture == nil) {
-        tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapVideoView:)];
-        tapGesture.numberOfTapsRequired = 2;
-        tapGesture.delegate = self;
+- (UITapGestureRecognizer *)twoTapGestureRecognizer {
+    UITapGestureRecognizer *twoTapGestureRecognizer = objc_getAssociatedObject(self, @selector(twoTapGestureRecognizer));
+    if (twoTapGestureRecognizer == nil) {
+        twoTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(twoTapGestureFired:)];
+        twoTapGestureRecognizer.numberOfTapsRequired = 2;
+        twoTapGestureRecognizer.delegate = self;
+        [twoTapGestureRecognizer setDelaysTouchesBegan:YES];
         
-        objc_setAssociatedObject(self, @selector(tapGestureRecognizer), tapGesture, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(twoTapGestureRecognizer), twoTapGestureRecognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    return tapGesture;
+    return twoTapGestureRecognizer;
+}
+
+- (UITapGestureRecognizer *)oneTapGestureRecognizer {
+    UITapGestureRecognizer *oneTapGestureRecognizer = objc_getAssociatedObject(self, @selector(oneTapGestureRecognizer));
+    if (oneTapGestureRecognizer == nil) {
+        oneTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(oneTapGestureFired:)];
+        oneTapGestureRecognizer.numberOfTapsRequired = 1;
+        oneTapGestureRecognizer.delegate = self;
+        [oneTapGestureRecognizer setDelaysTouchesBegan:YES];
+        
+        objc_setAssociatedObject(self, @selector(oneTapGestureRecognizer), oneTapGestureRecognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return oneTapGestureRecognizer;
 }
 
 - (UIPanGestureRecognizer *)panGestureRecognizer {

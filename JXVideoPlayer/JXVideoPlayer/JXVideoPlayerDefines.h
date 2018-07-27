@@ -104,6 +104,9 @@ typedef NS_ENUM(NSUInteger, JXVideoViewPlayControlDirection) {
 - (void)jx_videoViewHidePlayControlIndicator:(JXVideoView *)videoView;
 - (void)jx_videoView:(JXVideoView *)videoView playControlDidMoveToSecond:(CGFloat)second direction:(JXVideoViewPlayControlDirection)direction;
 
+- (void)jx_videoViewBeTapOneTime:(JXVideoView *)videoView;
+- (void)jx_videoViewBeTapDoubleTime:(JXVideoView *)videoView;
+
 @end
 
 
