@@ -83,7 +83,7 @@ typedef NS_ENUM(NSUInteger, JXVideoViewPlayControlDirection) {
 
 /**********************************************************************/
 
-@protocol JXVideoViewFullScreenDelegate
+@protocol JXVideoViewFullScreenDelegate <NSObject>
 
 @optional
 - (void)jx_videoViewLayoutSubviewsWhenEnterFullScreen:(JXVideoView *)videoView;

@@ -21,6 +21,7 @@
 		786A1584210AC6AA00579785 /* JXVideoView+PlayControlPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1583210AC6AA00579785 /* JXVideoView+PlayControlPrivate.m */; };
 		786A1587210ACE3D00579785 /* UIPanGestureRecognizer+SliderDirection.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1586210ACE3D00579785 /* UIPanGestureRecognizer+SliderDirection.m */; };
 		786A158A210ADBE900579785 /* JXVideoView+PlayControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1589210ADBE900579785 /* JXVideoView+PlayControl.m */; };
+		786A1591210AF57E00579785 /* AVAsset+JXVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1590210AF57E00579785 /* AVAsset+JXVideoView.m */; };
 		78AEA3BC36AA359BA89B6DEF /* libPods-JXVideoPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +55,8 @@
 		786A1586210ACE3D00579785 /* UIPanGestureRecognizer+SliderDirection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIPanGestureRecognizer+SliderDirection.m"; sourceTree = "<group>"; };
 		786A1588210ADBE900579785 /* JXVideoView+PlayControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JXVideoView+PlayControl.h"; sourceTree = "<group>"; };
 		786A1589210ADBE900579785 /* JXVideoView+PlayControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JXVideoView+PlayControl.m"; sourceTree = "<group>"; };
+		786A158F210AF57E00579785 /* AVAsset+JXVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVAsset+JXVideoView.h"; sourceTree = "<group>"; };
+		786A1590210AF57E00579785 /* AVAsset+JXVideoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+JXVideoView.m"; sourceTree = "<group>"; };
 		96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JXVideoPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4D4E046BC53C66A70151BBF /* Pods-JXVideoPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JXVideoPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JXVideoPlayer/Pods-JXVideoPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -136,6 +139,7 @@
 		786A15672109718600579785 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				786A158E210AF55A00579785 /* AVAseet */,
 				786A157E210AC56900579785 /* Gesture */,
 				786A15682109719300579785 /* JXVideoView */,
 			);
@@ -241,6 +245,15 @@
 				786A1583210AC6AA00579785 /* JXVideoView+PlayControlPrivate.m */,
 			);
 			path = Private;
+			sourceTree = "<group>";
+		};
+		786A158E210AF55A00579785 /* AVAseet */ = {
+			isa = PBXGroup;
+			children = (
+				786A158F210AF57E00579785 /* AVAsset+JXVideoView.h */,
+				786A1590210AF57E00579785 /* AVAsset+JXVideoView.m */,
+			);
+			path = AVAseet;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -377,6 +390,7 @@
 				786A157B210AB88400579785 /* JXVideoView+FullScreen.m in Sources */,
 				786A155C21095F9100579785 /* main.m in Sources */,
 				786A1584210AC6AA00579785 /* JXVideoView+PlayControlPrivate.m in Sources */,
+				786A1591210AF57E00579785 /* AVAsset+JXVideoView.m in Sources */,
 				786A154E21095F9000579785 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

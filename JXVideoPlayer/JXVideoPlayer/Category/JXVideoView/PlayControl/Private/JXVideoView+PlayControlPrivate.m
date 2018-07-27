@@ -13,6 +13,7 @@
 #import "UIPanGestureRecognizer+SliderDirection.h"
 #import "JXVideoView+PlayControl.h"
 
+#import "JXVideoView+FullScreen.h"
 @implementation JXVideoView (PlayControlPrivate)
 
 #pragma mark - life cycle
@@ -23,7 +24,12 @@
 
 #pragma mark - gesture method
 - (void)didTapVideoView:(UITapGestureRecognizer *)gesture {
-    [self pause];
+//    [self pause];
+    if (!self.isFullScreen) {
+        [self enterFullScreen];
+    } else {
+        [self exitFullScreen];
+    }
 }
 
 - (void)didReceivePanGesture:(UIPanGestureRecognizer *)gesture {
