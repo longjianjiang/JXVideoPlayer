@@ -9,24 +9,19 @@
 #import "ViewController.h"
 
 #import "JXVideoPlayer/JXVideoPlayer.h"
+#import <YYImage/YYImage.h>
 
+#import "JXVideoPlayMenu.h"
 
-
-@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate, JXVideoViewPlayControlDelegate>
+@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate, JXVideoViewPlayControlDelegate, JXVideoPlayMenuDelegate>
 
 @property (nonatomic, strong) JXVideoView *videoView;
+@property (nonatomic, strong) UIImageView *imageView;
 
+@property (nonatomic, strong) JXVideoPlayMenu *menu;
 @end
 
 @implementation ViewController
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        
-    }
-    return self;
-}
 
 
 - (void)viewDidLoad {
@@ -38,20 +33,47 @@
 #pragma mark - JXVideoViewOperationDelegate
 - (void)jx_videoViewDidFinishPrepare:(JXVideoView *)videoView {
     NSLog(@"did finish prepare video");
+    
+    [self.menu setVideoDuration:videoView.totalPlaySecond];
 }
 
 #pragma mark - JXVideoViewTimeDelegate
 - (void)jx_videoView:(JXVideoView *)videoView didPlayToSecond:(CGFloat)second {
-//    NSLog(@"current second is %f",second);
+    [self.menu updateSliderValue:second];
 }
 
 #pragma mark - JXVideoViewPlayControlDelegate
 - (void)jx_videoView:(JXVideoView *)videoView playControlDidMoveToSecond:(CGFloat)second direction:(JXVideoViewPlayControlDirection)direction {
     NSLog(@"quick value is %f", second);
+    [self.menu updateSliderValue:second];
 }
 
 - (void)jx_videoViewBeTapOneTime:(JXVideoView *)videoView {
-    NSLog(@"should show or hide menu");
+    [self.videoView controlWhetherShowMenuView];
+}
+
+- (void)jx_videoViewBeTapDoubleTime:(JXVideoView *)videoView {
+    self.videoView.isPlaying ? [self jx_videoMenuDidClickPauseButton:self.menu] : [self jx_videoMenuDidClickPlayButton:self.menu];
+}
+
+
+#pragma mark - JXVideoPlayMenuDelegate
+- (void)jx_videoMenuDidClickPauseButton:(JXVideoPlayMenu *)videoMenu {
+    [self.videoView pause];
+    [videoMenu updatePlayOrPauseButton];
+}
+
+- (void)jx_videoMenuDidClickPlayButton:(JXVideoPlayMenu *)videoMenu {
+    [self.videoView play];
+    [videoMenu updatePlayOrPauseButton];
+}
+
+- (void)jx_videoMenuDidClickEnterFullScreenButton:(JXVideoPlayMenu *)videoMenu {
+    [self.videoView enterFullScreen];
+}
+
+- (void)jx_videoMenuDidClickExitFullScreenButton:(JXVideoPlayMenu *)videoMenu {
+    [self.videoView exitFullScreen];
 }
 
 #pragma mark - getter and setter
@@ -71,11 +93,31 @@
         [_videoView setShouldObservePlayTime:YES timeGapToObserve:100];
         _videoView.timeDelegate = self;
         _videoView.playControlDelegate = self;
+        
+        _videoView.menuView = self.menu;
+        
     }
     return _videoView;
 }
 
+- (UIImageView *)imageView {
+    if (_imageView == nil) {
+         UIImage *apng = [YYImage imageNamed:@"uploading"];
+        _imageView = [[YYAnimatedImageView alloc] initWithImage:apng];;
+        _imageView.frame = CGRectMake(0, 400, 375, 120);
+    }
+    return _imageView;
+}
 
+- (JXVideoPlayMenu *)menu {
+    if (_menu == nil) {
+        _menu = [JXVideoPlayMenu new];
+        _menu.delegate = self;
+    }
+    return _menu;
+}
+
+#pragma mark - screen
 - (BOOL)shouldAutorotate {
     return NO;
 }

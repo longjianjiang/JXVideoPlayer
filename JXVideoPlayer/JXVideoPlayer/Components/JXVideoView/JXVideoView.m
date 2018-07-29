@@ -12,6 +12,7 @@
 #import "JXVideoView+OperationButton.h"
 #import "JXVideoView+Time.h"
 #import "JXVideoView+PlayControlPrivate.h"
+#import "JXVideoView+MenuView.h"
 
 NSString * const kJXVideoViewKVOKeyPathPlayerItemStatus = @"player.currentItem.status";
 NSString * const kJXVideoViewKVOKeyPathPlayerItemDuration = @"player.currentItem.duration";
@@ -83,6 +84,8 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
             [self replay];
         } else {
             [self.player play];
+            
+            [self showMenuView];
         }
     }
 }
@@ -258,6 +261,7 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [self deallocCoverView];
+    [self deallocMenuView];
     [self deallocOperationButton];
     [self deallocTime];
 }

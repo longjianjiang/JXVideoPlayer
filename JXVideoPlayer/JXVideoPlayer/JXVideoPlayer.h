@@ -18,5 +18,6 @@
 #import "JXVideoView+Time.h"
 #import "JXVideoView+PlayControl.h"
 #import "JXVideoView+FullScreen.h"
+#import "JXVideoView+MenuView.h"
 
 #endif /* JXVideoPlayer_h */

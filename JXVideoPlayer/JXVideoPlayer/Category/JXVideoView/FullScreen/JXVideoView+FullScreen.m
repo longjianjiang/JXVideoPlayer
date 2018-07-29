@@ -12,6 +12,8 @@
 #import <HandyFrame/UIView+LayoutMethods.h>
 #import "AVAsset+JXVideoView.h"
 
+#import "JXVideoView+MenuView.h"
+
 @interface JXVideoView (PrivateAboutFullScreen)
 
 @property (nonatomic, weak) UIView *originSuperView;
@@ -66,6 +68,7 @@
     [[UIApplication sharedApplication].keyWindow addSubview:self];
     self.frame = covertToWindowFrame;
     
+    [self menuViewEnterFullScreen];
     [UIView animateWithDuration:0.3f animations:^{
         self.frame = scaleFrame;
         self.center = [UIApplication sharedApplication].keyWindow.center;
@@ -91,6 +94,7 @@
     [self.originSuperView addSubview:self];
     self.originSuperView = nil;
     
+    [self menuViewExitFullScreen];
     [UIView animateWithDuration:0.3f animations:^{
         self.playerLayer.transform = CATransform3DMakeRotation(0.0 / 180.0 * M_PI, 0.0, 0.0, 1.0);
         self.frame = [self originVideoViewFrame];

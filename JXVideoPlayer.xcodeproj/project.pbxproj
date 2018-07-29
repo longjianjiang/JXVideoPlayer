@@ -22,6 +22,10 @@
 		786A1587210ACE3D00579785 /* UIPanGestureRecognizer+SliderDirection.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1586210ACE3D00579785 /* UIPanGestureRecognizer+SliderDirection.m */; };
 		786A158A210ADBE900579785 /* JXVideoView+PlayControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1589210ADBE900579785 /* JXVideoView+PlayControl.m */; };
 		786A1591210AF57E00579785 /* AVAsset+JXVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A1590210AF57E00579785 /* AVAsset+JXVideoView.m */; };
+		786A1599210B1C5B00579785 /* uploading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 786A1598210B1C5B00579785 /* uploading@2x.png */; };
+		786A159D210B22E100579785 /* JXVideoPlayMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 786A159C210B22E100579785 /* JXVideoPlayMenu.m */; };
+		78774C13210D9082008503F9 /* JXVideoView+MenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78774C12210D9082008503F9 /* JXVideoView+MenuView.m */; };
+		78774C17210DB327008503F9 /* JXWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 78774C15210DB326008503F9 /* JXWeakProxy.m */; };
 		78AEA3BC36AA359BA89B6DEF /* libPods-JXVideoPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +61,13 @@
 		786A1589210ADBE900579785 /* JXVideoView+PlayControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JXVideoView+PlayControl.m"; sourceTree = "<group>"; };
 		786A158F210AF57E00579785 /* AVAsset+JXVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVAsset+JXVideoView.h"; sourceTree = "<group>"; };
 		786A1590210AF57E00579785 /* AVAsset+JXVideoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+JXVideoView.m"; sourceTree = "<group>"; };
+		786A1598210B1C5B00579785 /* uploading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uploading@2x.png"; sourceTree = "<group>"; };
+		786A159B210B22E100579785 /* JXVideoPlayMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JXVideoPlayMenu.h; sourceTree = "<group>"; };
+		786A159C210B22E100579785 /* JXVideoPlayMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JXVideoPlayMenu.m; sourceTree = "<group>"; };
+		78774C11210D9082008503F9 /* JXVideoView+MenuView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JXVideoView+MenuView.h"; sourceTree = "<group>"; };
+		78774C12210D9082008503F9 /* JXVideoView+MenuView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JXVideoView+MenuView.m"; sourceTree = "<group>"; };
+		78774C15210DB326008503F9 /* JXWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JXWeakProxy.m; sourceTree = "<group>"; };
+		78774C16210DB327008503F9 /* JXWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JXWeakProxy.h; sourceTree = "<group>"; };
 		96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JXVideoPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4D4E046BC53C66A70151BBF /* Pods-JXVideoPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JXVideoPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JXVideoPlayer/Pods-JXVideoPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,6 +122,7 @@
 		786A154B21095F9000579785 /* JXVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				786A159A210B229C00579785 /* Menu */,
 				786A15622109614100579785 /* JXVideoPlayer */,
 				786A154C21095F9000579785 /* AppDelegate.h */,
 				786A154D21095F9000579785 /* AppDelegate.m */,
@@ -121,6 +133,7 @@
 				786A155721095F9100579785 /* LaunchScreen.storyboard */,
 				786A155A21095F9100579785 /* Info.plist */,
 				786A155B21095F9100579785 /* main.m */,
+				786A1598210B1C5B00579785 /* uploading@2x.png */,
 			);
 			path = JXVideoPlayer;
 			sourceTree = "<group>";
@@ -149,6 +162,7 @@
 		786A15682109719300579785 /* JXVideoView */ = {
 			isa = PBXGroup;
 			children = (
+				78774C10210D9054008503F9 /* MenuView */,
 				786A157F210AC60D00579785 /* PlayControl */,
 				786A1578210AB87100579785 /* FullScreen */,
 				786A156B210971BB00579785 /* OperationButton */,
@@ -188,6 +202,8 @@
 		786A15762109DA7900579785 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				78774C16210DB327008503F9 /* JXWeakProxy.h */,
+				78774C15210DB326008503F9 /* JXWeakProxy.m */,
 				786A15772109DA8C00579785 /* JXVideoView */,
 			);
 			path = Components;
@@ -256,6 +272,24 @@
 			path = AVAseet;
 			sourceTree = "<group>";
 		};
+		786A159A210B229C00579785 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				786A159B210B22E100579785 /* JXVideoPlayMenu.h */,
+				786A159C210B22E100579785 /* JXVideoPlayMenu.m */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		78774C10210D9054008503F9 /* MenuView */ = {
+			isa = PBXGroup;
+			children = (
+				78774C11210D9082008503F9 /* JXVideoView+MenuView.h */,
+				78774C12210D9082008503F9 /* JXVideoView+MenuView.m */,
+			);
+			path = MenuView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -316,6 +350,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				786A1599210B1C5B00579785 /* uploading@2x.png in Resources */,
 				786A155921095F9100579785 /* LaunchScreen.storyboard in Resources */,
 				786A155621095F9100579785 /* Assets.xcassets in Resources */,
 				786A155421095F9000579785 /* Main.storyboard in Resources */,
@@ -382,16 +417,19 @@
 			files = (
 				786A15652109631000579785 /* JXVideoView.m in Sources */,
 				786A156E210971E400579785 /* JXVideoView+Time.m in Sources */,
+				78774C17210DB327008503F9 /* JXWeakProxy.m in Sources */,
 				786A158A210ADBE900579785 /* JXVideoView+PlayControl.m in Sources */,
 				786A1587210ACE3D00579785 /* UIPanGestureRecognizer+SliderDirection.m in Sources */,
 				786A1574210971FE00579785 /* JXVideoView+OperationButton.m in Sources */,
 				786A155121095F9000579785 /* ViewController.m in Sources */,
 				786A1571210971F100579785 /* JXVideoView+CoverView.m in Sources */,
 				786A157B210AB88400579785 /* JXVideoView+FullScreen.m in Sources */,
+				78774C13210D9082008503F9 /* JXVideoView+MenuView.m in Sources */,
 				786A155C21095F9100579785 /* main.m in Sources */,
 				786A1584210AC6AA00579785 /* JXVideoView+PlayControlPrivate.m in Sources */,
 				786A1591210AF57E00579785 /* AVAsset+JXVideoView.m in Sources */,
 				786A154E21095F9000579785 /* AppDelegate.m in Sources */,
+				786A159D210B22E100579785 /* JXVideoPlayMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
