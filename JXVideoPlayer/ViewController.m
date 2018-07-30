@@ -13,12 +13,15 @@
 
 #import "JXVideoPlayMenu.h"
 
-@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate, JXVideoViewPlayControlDelegate, JXVideoPlayMenuDelegate>
+@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate, JXVideoViewPlayControlDelegate, JXVideoViewFullScreenDelegate, JXVideoPlayMenuDelegate>
 
 @property (nonatomic, strong) JXVideoView *videoView;
 @property (nonatomic, strong) UIImageView *imageView;
 
 @property (nonatomic, strong) JXVideoPlayMenu *menu;
+
+@property (nonatomic, assign) BOOL statusBarIsShouldHidden;
+
 @end
 
 @implementation ViewController
@@ -28,6 +31,10 @@
     [super viewDidLoad];
     [self.videoView prepare];
     [self.view addSubview:self.videoView];
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return _statusBarIsShouldHidden;
 }
 
 #pragma mark - JXVideoViewOperationDelegate
@@ -56,6 +63,24 @@
     self.videoView.isPlaying ? [self jx_videoMenuDidClickPauseButton:self.menu] : [self jx_videoMenuDidClickPlayButton:self.menu];
 }
 
+#pragma mark - JXVideoViewFullScreenDelegate
+- (void)jx_videoVidewDidFinishEnterFullScreen:(JXVideoView *)videoView {
+    [self.menu showTopView];
+}
+
+- (void)jx_videoVidewDidFinishExitFullScreen:(JXVideoView *)videoView {
+    [self.menu hideTopView];
+}
+
+- (void)jx_videoViewLayoutSubviewsWhenExitFullScreen:(JXVideoView *)videoView {
+     _statusBarIsShouldHidden = NO;
+     [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (void)jx_videoViewLayoutSubviewsWhenEnterFullScreen:(JXVideoView *)videoView {
+     _statusBarIsShouldHidden = YES;
+     [self setNeedsStatusBarAppearanceUpdate];
+}
 
 #pragma mark - JXVideoPlayMenuDelegate
 - (void)jx_videoMenuDidClickPauseButton:(JXVideoPlayMenu *)videoMenu {
@@ -76,11 +101,16 @@
     [self.videoView exitFullScreen];
 }
 
+- (void)jx_videoMenuDidClickTopViewBackButton:(JXVideoPlayMenu *)videoMenu {
+    [self.videoView exitFullScreen];
+}
+
 #pragma mark - getter and setter
 - (JXVideoView *)videoView {
     if (_videoView == nil) {
         CGRect rect = CGRectMake(0, 100,  [UIScreen mainScreen].bounds.size.width, 250);
         _videoView = [[JXVideoView alloc] initWithFrame:rect];
+        _videoView.backgroundColor = [UIColor blackColor];
         _videoView.operationDelegate = self;
         _videoView.videoUrl = [NSURL URLWithString:@"http://v.hexiaoxiang.com/60fecd5a82b447a9b9cca400348ec23b/4567f2da45a14b82bf96301733f02f38-5287d2089db37e62345123a1be272f8b.mp4"];
         _videoView.shouldShowOperationButton = YES;
@@ -93,7 +123,7 @@
         [_videoView setShouldObservePlayTime:YES timeGapToObserve:100];
         _videoView.timeDelegate = self;
         _videoView.playControlDelegate = self;
-        
+        _videoView.fullScreenDelegate = self;
         _videoView.menuView = self.menu;
         
     }

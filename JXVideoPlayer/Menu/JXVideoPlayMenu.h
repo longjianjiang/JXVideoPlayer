@@ -29,5 +29,8 @@
 - (void)updateSliderValue:(CGFloat)currentValue;
 - (void)updatePlayOrPauseButton;
 
+- (void)showTopView;
+- (void)hideTopView;
+
 @end
 

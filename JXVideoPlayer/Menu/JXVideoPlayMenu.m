@@ -40,6 +40,14 @@
     self.playOrPauseBtn.selected = !self.playOrPauseBtn.isSelected;
 }
 
+- (void)showTopView {
+    self.topView.hidden = NO;
+}
+
+- (void)hideTopView {
+    self.topView.hidden = YES;
+}
+
 #pragma mark - life cycle
 - (void)setupSubview {
     [self addSubview:self.topView];
@@ -53,7 +61,7 @@
     [self.bottomView addSubview:self.fullScreenBtn];
     
     
-    self.topView.hidden = YES;
+    [self hideTopView];
 }
 
 - (void)addSomeConstraints {
@@ -93,8 +101,23 @@
         make.leading.equalTo(self.playOrPauseBtn.mas_trailing).offset(16);
         make.trailing.equalTo(self.totalTimeLabel.mas_leading).offset(-16);
     }];
-    
 }
+
+- (void)safeAreaInsetsDidChange {
+    [super safeAreaInsetsDidChange];
+    
+    [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self).offset(-self.safeAreaInsets.bottom);
+        make.leading.equalTo(self).offset(self.safeAreaInsets.left);
+        make.trailing.equalTo(self).offset(-self.safeAreaInsets.right);
+    }];
+    
+    [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.leading.equalTo(self).offset(self.safeAreaInsets.left);
+        make.trailing.equalTo(self).offset(-self.safeAreaInsets.right);
+    }];
+}
+
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -190,7 +213,7 @@
 - (UIButton *)backBtn {
     if (_backBtn == nil) {
         _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_backBtn setImage:[UIImage imageNamed:@"navigation_back"] forState:UIControlStateNormal];
+        [_backBtn setImage:[UIImage imageNamed:@"nav_menu_back"] forState:UIControlStateNormal];
     }
     return _backBtn;
 }
