@@ -17,6 +17,7 @@
 NSString * const kJXVideoViewKVOKeyPathPlayerItemStatus = @"player.currentItem.status";
 NSString * const kJXVideoViewKVOKeyPathPlayerItemDuration = @"player.currentItem.duration";
 NSString * const kJXVideoViewKVOKeyPathLayerReadyForDisplay = @"layer.readyForDisplay";
+NSString * const kJXVideoViewKVOKeyPathPlayerItemLoadedTimeRanges = @"player.currentItem.loadedTimeRanges";
 
 static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
 
@@ -233,6 +234,11 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
               options:NSKeyValueObservingOptionNew
               context:&kJXVideoViewKVOContext];
     
+    [self addObserver:self
+           forKeyPath:kJXVideoViewKVOKeyPathPlayerItemLoadedTimeRanges
+              options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial
+              context:&kJXVideoViewKVOContext];
+    
     // Notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveAVPlayerItemDidPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveAVPlayerItemPlaybackStalledNotification:) name:AVPlayerItemPlaybackStalledNotification object:nil];
@@ -257,6 +263,7 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
     [self removeObserver:self forKeyPath:kJXVideoViewKVOKeyPathPlayerItemStatus context:kJXVideoViewKVOContext];
     [self removeObserver:self forKeyPath:kJXVideoViewKVOKeyPathPlayerItemDuration context:kJXVideoViewKVOContext];
     [self removeObserver:self forKeyPath:kJXVideoViewKVOKeyPathLayerReadyForDisplay context:kJXVideoViewKVOContext];
+    [self removeObserver:self forKeyPath:kJXVideoViewKVOKeyPathPlayerItemLoadedTimeRanges context:kJXVideoViewKVOContext];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
@@ -303,6 +310,16 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
         }
     }
     
+    if ([keyPath isEqualToString:kJXVideoViewKVOKeyPathPlayerItemLoadedTimeRanges]) {
+        NSTimeInterval ti = [self availableDuration];
+        CMTime duration = self.playerItem.duration;
+        CGFloat totalDuration = CMTimeGetSeconds(duration);
+        CGFloat rate = ti / totalDuration;
+        if ([self.timeDelegate respondsToSelector:@selector(jx_videoView:didBufferToProgress:)]) {
+            [self.timeDelegate jx_videoView:self didBufferToProgress:rate];
+        }
+    }
+    
 }
 
 #pragma mark - Notification
@@ -325,6 +342,16 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
     if (notification.object == self.player.currentItem) {
        
     }
+}
+
+#pragma mark - help method
+- (NSTimeInterval)availableDuration {
+    NSArray *loadedTimeRanges = [[_player currentItem] loadedTimeRanges];
+    CMTimeRange timeRange     = [loadedTimeRanges.firstObject CMTimeRangeValue];// 获取缓冲区域
+    float startSeconds        = CMTimeGetSeconds(timeRange.start);
+    float durationSeconds     = CMTimeGetSeconds(timeRange.duration);
+    NSTimeInterval result     = startSeconds + durationSeconds;// 计算缓冲总进度
+    return result;
 }
 
 #pragma mark - getter and setter

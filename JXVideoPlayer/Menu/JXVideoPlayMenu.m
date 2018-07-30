@@ -36,6 +36,10 @@
     self.playSlider.value = currentValue;
 }
 
+- (void)updateProgressViewValue:(CGFloat)progress {
+    self.progressView.progress = progress;
+}
+
 - (void)updatePlayOrPauseButton {
     self.playOrPauseBtn.selected = !self.playOrPauseBtn.isSelected;
 }
@@ -56,6 +60,7 @@
     
     [self addSubview:self.bottomView];
     [self.bottomView addSubview:self.playOrPauseBtn];
+    [self.bottomView addSubview:self.progressView];
     [self.bottomView addSubview:self.playSlider];
     [self.bottomView addSubview:self.totalTimeLabel];
     [self.bottomView addSubview:self.fullScreenBtn];
@@ -96,11 +101,17 @@
         make.centerY.equalTo(self.bottomView);
         make.trailing.equalTo(self.fullScreenBtn.mas_leading).offset(-16);
     }];
+    [self.progressView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.equalTo(self.playOrPauseBtn.mas_trailing).offset(16);
+        make.trailing.equalTo(self.totalTimeLabel.mas_leading).offset(-16);
+        make.centerY.equalTo(self.bottomView).offset(0.5);
+    }];
     [self.playSlider mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.bottomView);
         make.leading.equalTo(self.playOrPauseBtn.mas_trailing).offset(16);
         make.trailing.equalTo(self.totalTimeLabel.mas_leading).offset(-16);
     }];
+   
 }
 
 - (void)safeAreaInsetsDidChange {
@@ -164,7 +175,6 @@
 - (UIView *)bottomView {
     if (_bottomView == nil) {
         _bottomView = [UIView new];
-        _bottomView.backgroundColor = [UIColor orangeColor];
     }
     return _bottomView;
 }
@@ -181,8 +191,18 @@
     if (_playSlider == nil) {
         _playSlider = [UISlider new];
         [_playSlider setThumbImage:[UIImage imageNamed:@"video_menu_slider_thumb"] forState:UIControlStateNormal];
+        _playSlider.minimumTrackTintColor = [UIColor orangeColor];
+        _playSlider.maximumTrackTintColor = [UIColor clearColor]; //[UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
     }
     return _playSlider;
+}
+- (UIProgressView *)progressView {
+    if (_progressView == nil) {
+        _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+        _progressView.progressTintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.4];
+        _progressView.trackTintColor    = [UIColor grayColor];
+    }
+    return _progressView;
 }
 - (UILabel *)totalTimeLabel {
     if (_totalTimeLabel == nil) {

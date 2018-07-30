@@ -27,6 +27,8 @@
 		78774C13210D9082008503F9 /* JXVideoView+MenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78774C12210D9082008503F9 /* JXVideoView+MenuView.m */; };
 		78774C17210DB327008503F9 /* JXWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 78774C15210DB326008503F9 /* JXWeakProxy.m */; };
 		78AEA3BC36AA359BA89B6DEF /* libPods-JXVideoPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */; };
+		78CE28C6210EFC3400FF5622 /* video_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 78CE28C4210EFC3300FF5622 /* video_play.png */; };
+		78CE28C7210EFC3400FF5622 /* video_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 78CE28C5210EFC3300FF5622 /* video_pause.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +70,8 @@
 		78774C12210D9082008503F9 /* JXVideoView+MenuView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JXVideoView+MenuView.m"; sourceTree = "<group>"; };
 		78774C15210DB326008503F9 /* JXWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JXWeakProxy.m; sourceTree = "<group>"; };
 		78774C16210DB327008503F9 /* JXWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JXWeakProxy.h; sourceTree = "<group>"; };
+		78CE28C4210EFC3300FF5622 /* video_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_play.png; sourceTree = "<group>"; };
+		78CE28C5210EFC3300FF5622 /* video_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_pause.png; sourceTree = "<group>"; };
 		96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JXVideoPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4D4E046BC53C66A70151BBF /* Pods-JXVideoPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JXVideoPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JXVideoPlayer/Pods-JXVideoPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -134,6 +138,8 @@
 				786A155A21095F9100579785 /* Info.plist */,
 				786A155B21095F9100579785 /* main.m */,
 				786A1598210B1C5B00579785 /* uploading@2x.png */,
+				78CE28C5210EFC3300FF5622 /* video_pause.png */,
+				78CE28C4210EFC3300FF5622 /* video_play.png */,
 			);
 			path = JXVideoPlayer;
 			sourceTree = "<group>";
@@ -352,8 +358,10 @@
 			files = (
 				786A1599210B1C5B00579785 /* uploading@2x.png in Resources */,
 				786A155921095F9100579785 /* LaunchScreen.storyboard in Resources */,
+				78CE28C6210EFC3400FF5622 /* video_play.png in Resources */,
 				786A155621095F9100579785 /* Assets.xcassets in Resources */,
 				786A155421095F9000579785 /* Main.storyboard in Resources */,
+				78CE28C7210EFC3400FF5622 /* video_pause.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -27,6 +27,7 @@
 
 - (void)setVideoDuration:(CGFloat)videoDuration;
 - (void)updateSliderValue:(CGFloat)currentValue;
+- (void)updateProgressViewValue:(CGFloat)progress;
 - (void)updatePlayOrPauseButton;
 
 - (void)showTopView;

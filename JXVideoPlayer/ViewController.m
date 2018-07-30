@@ -13,10 +13,10 @@
 
 #import "JXVideoPlayMenu.h"
 
-@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate, JXVideoViewPlayControlDelegate, JXVideoViewFullScreenDelegate, JXVideoPlayMenuDelegate>
+@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate, JXVideoViewPlayControlDelegate, JXVideoViewFullScreenDelegate, JXVideoViewOperationButtonDelegate, JXVideoPlayMenuDelegate>
 
 @property (nonatomic, strong) JXVideoView *videoView;
-@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) YYAnimatedImageView *imageView;
 
 @property (nonatomic, strong) JXVideoPlayMenu *menu;
 
@@ -31,11 +31,29 @@
     [super viewDidLoad];
     [self.videoView prepare];
     [self.view addSubview:self.videoView];
+    
+    
+    [self.view addSubview:self.imageView];
+    [self.imageView addObserver:self forKeyPath:@"currentAnimatedImageIndex" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:nil];
 }
 
-- (BOOL)prefersStatusBarHidden {
-    return _statusBarIsShouldHidden;
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"currentAnimatedImageIndex"]) {
+        if (object == self.imageView) {
+//            NSLog(@"image frame idx %lu", (unsigned long)self.imageView.currentAnimatedImageIndex);
+        }
+    }
 }
+
+- (void)dealloc {
+    [self.imageView removeObserver:self forKeyPath:@"currentAnimatedImageIndex"];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    NSLog(@"touch then start animation image");
+    [self.imageView startAnimating];
+}
+
 
 #pragma mark - JXVideoViewOperationDelegate
 - (void)jx_videoViewDidFinishPrepare:(JXVideoView *)videoView {
@@ -47,6 +65,10 @@
 #pragma mark - JXVideoViewTimeDelegate
 - (void)jx_videoView:(JXVideoView *)videoView didPlayToSecond:(CGFloat)second {
     [self.menu updateSliderValue:second];
+}
+
+- (void)jx_videoView:(JXVideoView *)videoView didBufferToProgress:(CGFloat)progress {
+    [self.menu updateProgressViewValue:progress];
 }
 
 #pragma mark - JXVideoViewPlayControlDelegate
@@ -82,6 +104,13 @@
      [self setNeedsStatusBarAppearanceUpdate];
 }
 
+#pragma mark - JXVideoViewOperationButtonDelegate
+- (void)jx_videoView:(JXVideoView *)videoView didTappedPlayButton:(UIButton *)playButton {
+    if (self.videoView.menuView.frame.size.height) { // 判断menu是否真的已经显示，否则不更新按钮状态
+         [self.menu updatePlayOrPauseButton];
+    }
+}
+
 #pragma mark - JXVideoPlayMenuDelegate
 - (void)jx_videoMenuDidClickPauseButton:(JXVideoPlayMenu *)videoMenu {
     [self.videoView pause];
@@ -108,12 +137,13 @@
 #pragma mark - getter and setter
 - (JXVideoView *)videoView {
     if (_videoView == nil) {
-        CGRect rect = CGRectMake(0, 100,  [UIScreen mainScreen].bounds.size.width, 250);
+        CGRect rect = CGRectMake(0, 100,  [UIScreen mainScreen].bounds.size.width, 211);
         _videoView = [[JXVideoView alloc] initWithFrame:rect];
         _videoView.backgroundColor = [UIColor blackColor];
         _videoView.operationDelegate = self;
         _videoView.videoUrl = [NSURL URLWithString:@"http://v.hexiaoxiang.com/60fecd5a82b447a9b9cca400348ec23b/4567f2da45a14b82bf96301733f02f38-5287d2089db37e62345123a1be272f8b.mp4"];
         _videoView.shouldShowOperationButton = YES;
+        _videoView.operationButtonDelegate = self;
         _videoView.shouldShowCoverViewBeforePlay = YES;
         UILabel *coverView = [[UILabel alloc] init];
         coverView.text = @"Cover View";
@@ -130,11 +160,12 @@
     return _videoView;
 }
 
-- (UIImageView *)imageView {
+- (YYAnimatedImageView *)imageView {
     if (_imageView == nil) {
          UIImage *apng = [YYImage imageNamed:@"uploading"];
         _imageView = [[YYAnimatedImageView alloc] initWithImage:apng];;
         _imageView.frame = CGRectMake(0, 400, 375, 120);
+        _imageView.autoPlayAnimatedImage = NO;
     }
     return _imageView;
 }
@@ -152,4 +183,7 @@
     return NO;
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return _statusBarIsShouldHidden;
+}
 @end

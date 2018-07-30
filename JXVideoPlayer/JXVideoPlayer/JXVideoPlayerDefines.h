@@ -78,6 +78,7 @@ typedef NS_ENUM(NSUInteger, JXVideoViewPlayControlDirection) {
 - (void)jx_videoViewDidLoadVideoDuration:(JXVideoView *)videoView;
 - (void)jx_videoView:(JXVideoView *)videoView didFinishedMoveToTime:(CMTime)time;
 - (void)jx_videoView:(JXVideoView *)videoView didPlayToSecond:(CGFloat)second;
+- (void)jx_videoView:(JXVideoView *)videoView didBufferToProgress:(CGFloat)progress;
 
 @end
 
