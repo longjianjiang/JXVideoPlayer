@@ -9,6 +9,8 @@
 #import "JXVideoPlayMenu.h"
 #import <Masonry.h>
 
+#import "JXAnimationButton.h"
+
 @interface JXVideoPlayMenu ()
 
 @property (nonatomic, strong) UIView *topView;
@@ -124,6 +126,7 @@
     }];
     
     [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self).offset(self.safeAreaInsets.top);
         make.leading.equalTo(self).offset(self.safeAreaInsets.left);
         make.trailing.equalTo(self).offset(-self.safeAreaInsets.right);
     }];

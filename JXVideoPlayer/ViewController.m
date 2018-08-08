@@ -12,15 +12,18 @@
 #import <YYImage/YYImage.h>
 
 #import "JXVideoPlayMenu.h"
+#import "JXAnimationButton.h"
 
 @interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate, JXVideoViewPlayControlDelegate, JXVideoViewFullScreenDelegate, JXVideoViewOperationButtonDelegate, JXVideoPlayMenuDelegate>
 
 @property (nonatomic, strong) JXVideoView *videoView;
-@property (nonatomic, strong) YYAnimatedImageView *imageView;
-
 @property (nonatomic, strong) JXVideoPlayMenu *menu;
-
 @property (nonatomic, assign) BOOL statusBarIsShouldHidden;
+
+
+// test apng
+@property (nonatomic, strong) YYAnimatedImageView *imageView;
+@property (nonatomic, strong) JXAnimationButton *animationBtn;
 
 @end
 
@@ -28,11 +31,15 @@
 
 
 - (void)viewDidLoad {
+
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor grayColor];
+    
+    
     [self.videoView prepare];
     [self.view addSubview:self.videoView];
     
-    
+    [self.view addSubview:self.animationBtn];
     [self.view addSubview:self.imageView];
     [self.imageView addObserver:self forKeyPath:@"currentAnimatedImageIndex" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:nil];
 }
@@ -176,6 +183,19 @@
         _menu.delegate = self;
     }
     return _menu;
+}
+
+- (JXAnimationButton *)animationBtn {
+    if (_animationBtn == nil) {
+        _animationBtn = [[JXAnimationButton alloc] initWithNormalImageName:@"video_pause" selectedImageName:@"video_play"];
+        _animationBtn.frame = CGRectMake(100, 550, 24, 24);
+        [_animationBtn addTarget:self action:@selector(didClickAnimationBtn) forControlEvents:UIControlEventTouchDown];
+    }
+    return _animationBtn;
+}
+
+- (void)didClickAnimationBtn {
+    self.animationBtn.selected = !self.animationBtn.isSelected;
 }
 
 #pragma mark - screen

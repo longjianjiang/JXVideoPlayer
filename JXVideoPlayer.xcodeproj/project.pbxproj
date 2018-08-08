@@ -29,6 +29,7 @@
 		78AEA3BC36AA359BA89B6DEF /* libPods-JXVideoPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */; };
 		78CE28C6210EFC3400FF5622 /* video_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 78CE28C4210EFC3300FF5622 /* video_play.png */; };
 		78CE28C7210EFC3400FF5622 /* video_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 78CE28C5210EFC3300FF5622 /* video_pause.png */; };
+		78CE28CA210EFFB100FF5622 /* JXAnimationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CE28C9210EFFB100FF5622 /* JXAnimationButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,8 @@
 		78774C16210DB327008503F9 /* JXWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JXWeakProxy.h; sourceTree = "<group>"; };
 		78CE28C4210EFC3300FF5622 /* video_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_play.png; sourceTree = "<group>"; };
 		78CE28C5210EFC3300FF5622 /* video_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_pause.png; sourceTree = "<group>"; };
+		78CE28C8210EFFB100FF5622 /* JXAnimationButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JXAnimationButton.h; sourceTree = "<group>"; };
+		78CE28C9210EFFB100FF5622 /* JXAnimationButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JXAnimationButton.m; sourceTree = "<group>"; };
 		96F0358982D28B390721ACBF /* libPods-JXVideoPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-JXVideoPlayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4D4E046BC53C66A70151BBF /* Pods-JXVideoPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JXVideoPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JXVideoPlayer/Pods-JXVideoPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -283,6 +286,8 @@
 			children = (
 				786A159B210B22E100579785 /* JXVideoPlayMenu.h */,
 				786A159C210B22E100579785 /* JXVideoPlayMenu.m */,
+				78CE28C8210EFFB100FF5622 /* JXAnimationButton.h */,
+				78CE28C9210EFFB100FF5622 /* JXAnimationButton.m */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -435,6 +440,7 @@
 				78774C13210D9082008503F9 /* JXVideoView+MenuView.m in Sources */,
 				786A155C21095F9100579785 /* main.m in Sources */,
 				786A1584210AC6AA00579785 /* JXVideoView+PlayControlPrivate.m in Sources */,
+				78CE28CA210EFFB100FF5622 /* JXAnimationButton.m in Sources */,
 				786A1591210AF57E00579785 /* AVAsset+JXVideoView.m in Sources */,
 				786A154E21095F9000579785 /* AppDelegate.m in Sources */,
 				786A159D210B22E100579785 /* JXVideoPlayMenu.m in Sources */,
