@@ -124,7 +124,9 @@
 }
 
 - (void)changeVolumeOrBrightnessWithVelocityY:(CGFloat)velocityY isVolume:(BOOL)isVolume {
-    isVolume ? (self.volumeSlider.value -= velocityY / self.speedOfVolumeOrBrightnessChange) : ([UIScreen mainScreen].brightness -= velocityY / self.speedOfVolumeOrBrightnessChange);
+    if (self.isPlaying) {
+        isVolume ? (self.volumeSlider.value -= velocityY / self.speedOfVolumeOrBrightnessChange) : ([UIScreen mainScreen].brightness -= velocityY / self.speedOfVolumeOrBrightnessChange);
+    }
 }
 
 #pragma mark - UIGestureRecognizerDelegate

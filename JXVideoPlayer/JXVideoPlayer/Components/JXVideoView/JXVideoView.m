@@ -66,6 +66,10 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
 }
 
 - (void)play {
+    if (self.prepareStatus != JXVideoViewPrepareStatusPrepareFinished) {
+        return;
+    }
+    
     [self hidePlayButton];
     if (self.isPlaying) {
         [self hideCoverView];
@@ -76,19 +80,18 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
         [self.operationDelegate jx_videoViewWillStartPlaying:self];
     }
     
-    if (self.prepareStatus == JXVideoViewPrepareStatusPrepareFinished) {
-        [self willStartPlay];
+    [self willStartPlay];
+    
+    NSInteger currentPlaySecond = (NSInteger)(self.currentPlaySecond * 100);
+    NSInteger totalDurationSeconds = (NSInteger)(self.totalPlaySecond * 100);
+    if (currentPlaySecond == totalDurationSeconds && totalDurationSeconds > 0) {
+        [self replay];
+    } else {
+        [self.player play];
         
-        NSInteger currentPlaySecond = (NSInteger)(self.currentPlaySecond * 100);
-        NSInteger totalDurationSeconds = (NSInteger)(self.totalPlaySecond * 100);
-        if (currentPlaySecond == totalDurationSeconds && totalDurationSeconds > 0) {
-            [self replay];
-        } else {
-            [self.player play];
-            
-            [self showMenuView];
-        }
+        [self showMenuView];
     }
+    
 }
 
 - (void)pause {
@@ -315,7 +318,7 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
         CMTime duration = self.playerItem.duration;
         CGFloat totalDuration = CMTimeGetSeconds(duration);
         CGFloat rate = ti / totalDuration;
-        if ([self.timeDelegate respondsToSelector:@selector(jx_videoView:didBufferToProgress:)]) {
+        if (self.isPlaying && [self.timeDelegate respondsToSelector:@selector(jx_videoView:didBufferToProgress:)]) {
             [self.timeDelegate jx_videoView:self didBufferToProgress:rate];
         }
     }

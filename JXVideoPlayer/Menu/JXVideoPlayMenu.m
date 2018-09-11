@@ -126,7 +126,6 @@
     }];
     
     [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(self.safeAreaInsets.top);
         make.leading.equalTo(self).offset(self.safeAreaInsets.left);
         make.trailing.equalTo(self).offset(-self.safeAreaInsets.right);
     }];

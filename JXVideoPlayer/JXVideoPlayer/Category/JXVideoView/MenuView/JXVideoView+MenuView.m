@@ -59,6 +59,7 @@ static NSInteger const kAutoHideTimeInterval = 5.0;
     CGFloat height = [UIScreen mainScreen].bounds.size.width;
     
     self.menuView.frame = CGRectMake(0, 0, width, height);
+    [self.menuView layoutIfNeeded];
 }
 
 - (void)menuViewExitFullScreen {
