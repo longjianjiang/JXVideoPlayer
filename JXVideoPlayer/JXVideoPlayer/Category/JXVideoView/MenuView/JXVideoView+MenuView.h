@@ -12,10 +12,14 @@
 
 @property (nonatomic, strong) UIView *menuView;
 
-- (void)showMenuView;
+- (void)initMenuView;
 - (void)deallocMenuView;
 
+- (void)makeMenuShow;
+- (void)makeMenuHide;
 - (void)controlWhetherShowMenuView;
+- (void)makeMenuViewNotAutoHide;
+- (void)makeMenuViewAutoHide;
 
 - (void)menuViewEnterFullScreen;
 - (void)menuViewExitFullScreen;

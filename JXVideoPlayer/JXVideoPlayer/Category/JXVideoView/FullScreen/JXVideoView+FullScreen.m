@@ -13,6 +13,7 @@
 #import "AVAsset+JXVideoView.h"
 
 #import "JXVideoView+MenuView.h"
+#import "JXVideoView+PrepareLoading.h"
 
 @interface JXVideoView (PrivateAboutFullScreen)
 
@@ -69,22 +70,28 @@
     self.frame = covertToWindowFrame;
     
     [self menuViewEnterFullScreen];
-    [UIView animateWithDuration:0.3f animations:^{
-        self.frame = scaleFrame;
-        self.center = [UIApplication sharedApplication].keyWindow.center;
-        
-        if ([self.fullScreenDelegate respondsToSelector:@selector(jx_videoViewLayoutSubviewsWhenEnterFullScreen:)]) {
-            [self.fullScreenDelegate jx_videoViewLayoutSubviewsWhenEnterFullScreen:self];
-        }
-        self.layer.transform = transform;
-        
-    } completion:^(BOOL finished) {
-        if (finished) {
-            if ([self.fullScreenDelegate respondsToSelector:@selector(jx_videoVidewDidFinishEnterFullScreen:)]) {
-                [self.fullScreenDelegate jx_videoVidewDidFinishEnterFullScreen:self];
-            }
-        }
-    }];
+    [self loadingIndicatorEnterFullScreen];
+  
+    [UIView animateWithDuration:0.3f
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                          self.frame = scaleFrame;
+                          self.center = [UIApplication sharedApplication].keyWindow.center;
+
+                          if ([self.fullScreenDelegate respondsToSelector:@selector(jx_videoViewLayoutSubviewsWhenEnterFullScreen:)]) {
+                              [self.fullScreenDelegate jx_videoViewLayoutSubviewsWhenEnterFullScreen:self];
+                          }
+                          self.layer.transform = transform;
+                     }
+                     completion:^(BOOL finished) {
+                          if (finished) {
+                              if ([self.fullScreenDelegate respondsToSelector:@selector(jx_videoVidewDidFinishEnterFullScreen:)]) {
+                                  [self.fullScreenDelegate jx_videoVidewDidFinishEnterFullScreen:self];
+                              }
+                          }
+                    }
+    ];
     
     [self refreshStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
     
@@ -95,26 +102,36 @@
     self.originSuperView = nil;
     
     [self menuViewExitFullScreen];
-    [UIView animateWithDuration:0.3f animations:^{
-        self.playerLayer.transform = CATransform3DMakeRotation(0.0 / 180.0 * M_PI, 0.0, 0.0, 1.0);
-        self.frame = [self originVideoViewFrame];
-        
-        if ([self.fullScreenDelegate respondsToSelector:@selector(jx_videoViewLayoutSubviewsWhenExitFullScreen:)]) {
-            [self.fullScreenDelegate jx_videoViewLayoutSubviewsWhenExitFullScreen:self];
-        }
-    } completion:^(BOOL finished) {
-        if (finished) {
-            if ( [self.fullScreenDelegate respondsToSelector:@selector(jx_videoVidewDidFinishExitFullScreen:)]) {
-                [self.fullScreenDelegate jx_videoVidewDidFinishExitFullScreen:self];
-            }
-        }
-    }];
+    [self loadingIndicatorExitFullScreen];
+
+    [UIView animateWithDuration:0.3f
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                       self.playerLayer.transform = CATransform3DMakeRotation(0.0 / 180.0 * M_PI, 0.0, 0.0, 1.0);
+                       self.frame = [self originVideoViewFrame];
+
+                       if ([self.fullScreenDelegate respondsToSelector:@selector(jx_videoViewLayoutSubviewsWhenExitFullScreen:)]) {
+                         [self.fullScreenDelegate jx_videoViewLayoutSubviewsWhenExitFullScreen:self];
+                       }
+                     }
+                     completion:^(BOOL finished) {
+                       if (finished) {
+                         if ( [self.fullScreenDelegate respondsToSelector:@selector(jx_videoVidewDidFinishExitFullScreen:)]) {
+                           [self.fullScreenDelegate jx_videoVidewDidFinishExitFullScreen:self];
+                         }
+                       }
+                     }
+     ];
     
     [self refreshStatusBarOrientation:UIInterfaceOrientationPortrait];
 }
 
 - (void)refreshStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    [[UIApplication sharedApplication] setStatusBarOrientation:interfaceOrientation animated:YES];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  [[UIApplication sharedApplication] setStatusBarOrientation:interfaceOrientation animated:NO];
+#pragma clang diagnostic pop
 }
 
 #pragma mark - getter and setter

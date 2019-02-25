@@ -10,6 +10,7 @@
 #import <objc/runtime.h>
 #import "JXVideoView+CoverView.h"
 #import "JXVideoView+OperationButton.h"
+#import "JXVideoView+PrepareLoading.h"
 
 @interface JXVideoView (PrivateAboutTime)
 
@@ -50,7 +51,7 @@
             if ([strongSelf.operationDelegate respondsToSelector:@selector(jx_videoViewDidStartPlaying:)]) {
                 [strongSelf.operationDelegate jx_videoViewDidStartPlaying:strongSelf];
             }
-            
+            [strongSelf hideLoadingIndicator];
             [strongSelf hidePlayButton];
             [strongSelf hideCoverView];
             [strongSelf removeVideoStartTimeObserver];
@@ -116,6 +117,20 @@
 }
 
 - (void)moveToSecond:(CGFloat)second shouldPlay:(BOOL)shouldPlay {
+  if (second >= self.totalPlaySecond) {
+    if (self.shouldReplayWhenFinish) {
+      [self replay];
+    } else {
+      [self pause];
+      [self.player seekToTime:kCMTimeZero];
+      [self showPlayButton];
+    }
+
+    if ([self.operationDelegate respondsToSelector:@selector(jx_videoViewDidFinishPlaying:)]) {
+      [self.operationDelegate jx_videoViewDidFinishPlaying:self];
+    }
+  }
+  [self showLoadingIndicator];
     CMTime time = CMTimeMake(second, 1.0f);
     WeakSelf
     [self.player seekToTime:CMTimeMakeWithSeconds(second, 600) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
@@ -124,7 +139,8 @@
         if ([strongSelf.timeDelegate respondsToSelector:@selector(jx_videoView:didFinishedMoveToTime:)]) {
             [strongSelf.timeDelegate jx_videoView:strongSelf didFinishedMoveToTime:time];
         }
-        
+      
+      [self hideLoadingIndicator];
         if (shouldPlay) {
             [strongSelf play];
         }

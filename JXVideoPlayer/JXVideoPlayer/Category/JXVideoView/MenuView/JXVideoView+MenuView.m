@@ -11,7 +11,7 @@
 #import <HandyFrame/UIView+LayoutMethods.h>
 #import "JXWeakProxy.h"
 
-static NSInteger const kAutoHideTimeInterval = 5.0;
+static NSInteger const kAutoHideTimeInterval = 7.0;
 
 @interface JXVideoView (MenuViewPrivateAboutFullScreen)
 
@@ -47,6 +47,14 @@ static NSInteger const kAutoHideTimeInterval = 5.0;
 }
 
 #pragma mark - public method
+- (void)makeMenuViewNotAutoHide {
+  [self invalidateTimer];
+}
+
+- (void)makeMenuViewAutoHide {
+  [self autoHideMenuWithTimeInterval:kAutoHideTimeInterval];
+}
+
 - (void)controlWhetherShowMenuView {
     self.menuView.isHidden ? [self makeMenuShow] : [self makeMenuHide];
 }
@@ -57,8 +65,19 @@ static NSInteger const kAutoHideTimeInterval = 5.0;
     
     CGFloat width = [UIScreen mainScreen].bounds.size.height;
     CGFloat height = [UIScreen mainScreen].bounds.size.width;
-    
-    self.menuView.frame = CGRectMake(0, 0, width, height);
+  
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 11.0 && SCREEN_HEIGHT >= 812) {
+      CGFloat hMargin = 44;
+      CGFloat bMargin = 21;
+      
+      self.menuView.frame = CGRectMake(hMargin,
+                                       0,
+                                       width - 2 * hMargin,
+                                       height - bMargin);
+    } else {
+      self.menuView.frame = CGRectMake(0, 0, width, height);
+    }
+  
     [self.menuView layoutIfNeeded];
 }
 
@@ -71,9 +90,17 @@ static NSInteger const kAutoHideTimeInterval = 5.0;
     if (self.menuView.superview == nil) {
         [self addSubview:self.menuView];
         [self layoutMenuView];
-        
+
         [self autoHideMenuWithTimeInterval:kAutoHideTimeInterval];
     }
+}
+
+- (void)initMenuView {
+  if (self.menuView.superview == nil) {
+    [self addSubview:self.menuView];
+    [self layoutMenuView];
+    self.menuView.hidden = YES;
+  }
 }
 
 - (void)deallocMenuView {

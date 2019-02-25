@@ -35,6 +35,11 @@ typedef NS_ENUM(NSUInteger, JXVideoViewPlayControlDirection) {
     JXVideoViewPlayControlDirectionMoveBackward,
 };
 
+typedef NS_ENUM(NSUInteger, JXVideoViewStalledStrategy) {
+  JXVideoViewStalledStrategyPlay,
+  JXVideoViewStalledStrategyDelegateCallback,
+};
+
 /**********************************************************************/
 
 @protocol JXVideoViewOperationDelegate <NSObject>
@@ -46,6 +51,7 @@ typedef NS_ENUM(NSUInteger, JXVideoViewPlayControlDirection) {
 
 - (void)jx_videoViewWillStartPlaying:(JXVideoView *)videoView;
 - (void)jx_videoViewDidStartPlaying:(JXVideoView *)videoView; // will call this method when the video is **really** playing.
+- (void)jx_videoViewStalledWhenPlaying:(JXVideoView *)videoView;
 - (void)jx_videoViewDidFinishPlaying:(JXVideoView *)videoView;
 
 - (void)jx_videoViewWillPause:(JXVideoView *)videoView;

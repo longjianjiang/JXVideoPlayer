@@ -34,11 +34,12 @@
 
 #pragma mark - public method
 - (void)showPlayButton {
-    
+  [[NSOperationQueue mainQueue] addOperationWithBlock:^{
     if (self.shouldShowOperationButton && self.playButton.superview == nil) {
-        [self addSubview:self.playButton];
-        [self layoutOperationButton];
+      [self addSubview:self.playButton];
+      [self layoutOperationButton];
     }
+  }];
 }
 
 - (void)hidePlayButton {
@@ -60,7 +61,7 @@
 
 #pragma mark - getter and setter
 - (BOOL)shouldShowOperationButton {
-    return objc_getAssociatedObject(self, @selector(shouldShowOperationButton));
+  return [objc_getAssociatedObject(self, @selector(shouldShowOperationButton)) boolValue];;
 }
 
 - (void)setShouldShowOperationButton:(BOOL)shouldShowOperationButton {

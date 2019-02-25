@@ -40,7 +40,14 @@
 }
 
 - (void)didReceivePanGesture:(UIPanGestureRecognizer *)gesture {
-    
+    if (self.shouldOnlyFullScreenSupportPlayControl == YES   &&
+        self.isFullScreen == NO) {
+      return;
+    }
+    if (self.prepareStatus != JXVideoViewPrepareStatusPrepareFinished) {
+      return;
+    }
+  
     CGPoint velocityPoint = [gesture velocityInView:self];
     CGPoint locationPoint = [gesture locationInView:self];
     
@@ -83,12 +90,15 @@
             
         case UIGestureRecognizerStateEnded: {
             if (gesture.sliderDirection == JXUIPanGestureSlideDirectionHorizontal) {
-
-                [self moveToSecond:self.secondToMove shouldPlay:YES];
                 
                 if ([self.playControlDelegate respondsToSelector:@selector(jx_videoViewHidePlayControlIndicator:)]) {
                     [self.playControlDelegate jx_videoViewHidePlayControlIndicator:self];
                 }
+              
+              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self moveToSecond:self.secondToMove shouldPlay:YES];
+              });
+              
             }
             
             if (gesture.sliderDirection == JXUIPanGestureSlideDirectionVertical) {
@@ -124,9 +134,9 @@
 }
 
 - (void)changeVolumeOrBrightnessWithVelocityY:(CGFloat)velocityY isVolume:(BOOL)isVolume {
-    if (self.isPlaying) {
-        isVolume ? (self.volumeSlider.value -= velocityY / self.speedOfVolumeOrBrightnessChange) : ([UIScreen mainScreen].brightness -= velocityY / self.speedOfVolumeOrBrightnessChange);
-    }
+  if (self.isPlaying) {
+    isVolume ? (self.volumeSlider.value -= velocityY / self.speedOfVolumeOrBrightnessChange) : ([UIScreen mainScreen].brightness -= velocityY / self.speedOfVolumeOrBrightnessChange);
+  }
 }
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -134,6 +144,9 @@
     return YES;
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+  return ![touch.view isKindOfClass:[UISlider class]];
+}
 
 #pragma mark - getter and setter
 - (CGFloat)secondToMove {

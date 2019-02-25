@@ -29,7 +29,9 @@
 @property (nonatomic, assign) BOOL shouldPlayAfterPrepareFinished; // default is NO
 @property (nonatomic, assign) BOOL shouldReplayWhenFinish; // default is NO
 @property (nonatomic, assign) BOOL shouldChangeOrientationToFitVideo; // default is NO
+@property (nonatomic, assign) BOOL shouldOnlyFullScreenSupportPlayControl; // default is NO
 
+@property (nonatomic, assign) JXVideoViewStalledStrategy stalledStrategy;
 @property (nonatomic, weak) id<JXVideoViewOperationDelegate> operationDelegate;
 
 @property (nonatomic, strong, readonly) AVPlayerLayer *playerLayer;

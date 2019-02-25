@@ -13,6 +13,8 @@
 #import "JXVideoView+Time.h"
 #import "JXVideoView+PlayControlPrivate.h"
 #import "JXVideoView+MenuView.h"
+#import "JXVideoView+PrepareLoading.h"
+#import "JXVideoView+MenuView.h"
 
 NSString * const kJXVideoViewKVOKeyPathPlayerItemStatus = @"player.currentItem.status";
 NSString * const kJXVideoViewKVOKeyPathPlayerItemDuration = @"player.currentItem.duration";
@@ -66,37 +68,43 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
 }
 
 - (void)play {
-    if (self.prepareStatus != JXVideoViewPrepareStatusPrepareFinished) {
-        return;
-    }
-    
-    [self hidePlayButton];
-    if (self.isPlaying) {
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+      [self hidePlayButton];
+      if (self.isPlaying) {
         [self hideCoverView];
         return;
-    }
-    
+      }
+    }];
+
     if ([self.operationDelegate respondsToSelector:@selector(jx_videoViewWillStartPlaying:)]) {
         [self.operationDelegate jx_videoViewWillStartPlaying:self];
     }
-    
-    [self willStartPlay];
-    
-    NSInteger currentPlaySecond = (NSInteger)(self.currentPlaySecond * 100);
-    NSInteger totalDurationSeconds = (NSInteger)(self.totalPlaySecond * 100);
-    if (currentPlaySecond == totalDurationSeconds && totalDurationSeconds > 0) {
+  
+    if (self.prepareStatus == JXVideoViewPrepareStatusPrepareFinished) {
+      [self willStartPlay];
+      
+      NSInteger currentPlaySecond = (NSInteger)(self.currentPlaySecond * 100);
+      NSInteger totalDurationSeconds = (NSInteger)(self.totalPlaySecond * 100);
+      if (currentPlaySecond == totalDurationSeconds && totalDurationSeconds > 0) {
         [self replay];
-    } else {
+      } else {
         [self.player play];
         
-        [self showMenuView];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+          [self initMenuView];
+        }];
+        
+      }
+      
+    } else {
+      self.shouldPlayAfterPrepareFinished = YES;
+      [self prepare];
     }
-    
 }
 
 - (void)pause {
     [self hideCoverView];
-    [self showPlayButton];
+//    [self showPlayButton];
     if (self.isPlaying) {
         if ([self.operationDelegate respondsToSelector:@selector(jx_videoViewWillPause:)]) {
             [self.operationDelegate jx_videoViewWillPause:self];
@@ -133,6 +141,8 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
 
 #pragma mark - private method
 - (void)asynchronouslyLoadUrlAsset:(AVAsset *)asset {
+    [self showLoadingIndicator];
+  
     if ([self.operationDelegate respondsToSelector:@selector(jx_videoViewWillStartPrepare:)]) {
         [self.operationDelegate jx_videoViewWillStartPrepare:self];
     }
@@ -156,7 +166,15 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
         if ([asset statusOfValueForKey:@"playable" error:&error] == AVKeyValueStatusFailed) {
             NSLog(@"%@", error);
         }
-        
+      
+        if (error) {
+          NSLog(@"prepare video error %@, video url is %@", error, self.videoUrl.absoluteString);
+          self.prepareStatus = JXVideoViewPrepareStatusNotPrepared;
+          [self hideLoadingIndicator];
+          [self showPlayButton];
+          return;
+        }
+      
         strongSelf.playerItem = [AVPlayerItem playerItemWithAsset:asset];
         strongSelf.prepareStatus = JXVideoViewPrepareStatusPrepareFinished;
         
@@ -253,6 +271,7 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
     _shouldPlayAfterPrepareFinished = NO;
     _shouldReplayWhenFinish = NO;
     _shouldChangeOrientationToFitVideo = NO;
+    _shouldOnlyFullScreenSupportPlayControl = NO;
     _prepareStatus = JXVideoViewPrepareStatusNotPrepared;
     
     [self initCoverView];
@@ -269,7 +288,7 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
     [self removeObserver:self forKeyPath:kJXVideoViewKVOKeyPathPlayerItemLoadedTimeRanges context:kJXVideoViewKVOContext];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
+  
     [self deallocCoverView];
     [self deallocMenuView];
     [self deallocOperationButton];
@@ -343,7 +362,14 @@ static void * kJXVideoViewKVOContext = &kJXVideoViewKVOContext;
 
 - (void)didReceiveAVPlayerItemPlaybackStalledNotification:(NSNotification *)notification {
     if (notification.object == self.player.currentItem) {
-       
+      if (self.stalledStrategy == JXVideoViewStalledStrategyPlay) {
+        [self play];
+      }
+      if (self.stalledStrategy == JXVideoViewStalledStrategyDelegateCallback) {
+        if ([self.operationDelegate respondsToSelector:@selector(jx_videoViewStalledWhenPlaying:)]) {
+          [self.operationDelegate jx_videoViewStalledWhenPlaying:self];
+        }
+      }
     }
 }
 

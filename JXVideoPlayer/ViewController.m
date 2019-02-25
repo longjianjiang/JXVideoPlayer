@@ -8,89 +8,201 @@
 
 #import "ViewController.h"
 
-#import "JXVideoPlayer/JXVideoPlayer.h"
-#import <YYImage/YYImage.h>
-
+#import "JXVideoPlayer.h"
 #import "JXVideoPlayMenu.h"
-#import "JXAnimationButton.h"
+#import "JXGestureSeekProgressView.h"
+#import "UIApplication+TopViewController.h"
 
-@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate, JXVideoViewPlayControlDelegate, JXVideoViewFullScreenDelegate, JXVideoViewOperationButtonDelegate, JXVideoPlayMenuDelegate>
+#import <HandyFrame/UIView+LayoutMethods.h>
+#include <ReactiveObjC/ReactiveObjC.h>
+
+@interface ViewController ()<JXVideoViewOperationDelegate, JXVideoViewTimeDelegate, JXVideoViewPlayControlDelegate, JXVideoViewFullScreenDelegate, JXVideoViewOperationButtonDelegate, JXVideoPlayMenuDelegate> {
+    BOOL _isMoveSlider;
+    BOOL _statusBarIsShouldHidden;
+    BOOL _isPauseByBackgroundMode;
+    UIStatusBarStyle _sbStyle;
+}
 
 @property (nonatomic, strong) JXVideoView *videoView;
+@property (nonatomic, strong) JXGestureSeekProgressView *gesturePreviewView;
 @property (nonatomic, strong) JXVideoPlayMenu *menu;
-@property (nonatomic, assign) BOOL statusBarIsShouldHidden;
-
-
-// test apng
-@property (nonatomic, strong) YYAnimatedImageView *imageView;
-@property (nonatomic, strong) JXAnimationButton *animationBtn;
 
 @end
 
+
 @implementation ViewController
 
+#pragma mark - life cycle
 
-- (void)viewDidLoad {
-
-    [super viewDidLoad];
-    self.view.backgroundColor = [UIColor grayColor];
-    
-    
-    [self.videoView prepare];
-    [self.view addSubview:self.videoView];
-    
-    [self.view addSubview:self.animationBtn];
-    [self.view addSubview:self.imageView];
-    [self.imageView addObserver:self forKeyPath:@"currentAnimatedImageIndex" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:nil];
+- (void)dealloc {
+    [self resignNotification];
+    [self.videoView stopWithReleaseVideo:YES];
+    self.videoView.timeDelegate = nil;
+    self.videoView.operationDelegate = nil;
+    self.videoView.operationButtonDelegate = nil;
+    self.videoView.playControlDelegate = nil;
+    self.videoView.fullScreenDelegate = nil;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"currentAnimatedImageIndex"]) {
-        if (object == self.imageView) {
-//            NSLog(@"image frame idx %lu", (unsigned long)self.imageView.currentAnimatedImageIndex);
+- (void)bind {
+    @weakify(self);
+    [[RACObserve(self.videoView.menuView, hidden) skip:1] subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        if (self.videoView.isFullScreen) {
+            self->_statusBarIsShouldHidden = [x boolValue];
+            [self setNeedsStatusBarAppearanceUpdate];
         }
+    }];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    [self registerNotification];
+    [self bind];
+    [self setupSubview];
+}
+
+- (void)setupSubview {
+    self.view.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.videoView];
+}
+
+- (void)registerNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_entereBackgroundMode) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_enterForegroundMode) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (void)resignNotification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - notification method
+- (void)_entereBackgroundMode {
+    if (self.menu.hidden && self.videoView.isFullScreen) {
+        [self.videoView controlWhetherShowMenuView];
+    }
+    if (self.videoView.isPlaying == NO) {
+        return;
+    }
+    _isPauseByBackgroundMode = YES;
+    [self.videoView pause];
+}
+
+- (void)_enterForegroundMode {
+    if (_isPauseByBackgroundMode == NO) {
+        return;
+    }
+
+    UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *vc = [UIApplication topViewControllerFromVC:rootVC];
+    if (self.presentedViewController == nil && vc == self && self.videoView.prepareStatus == JXVideoViewPrepareStatusPrepareFinished) {
+        [self.videoView play];
+        // 没有这个判断，进后台后，退出全屏后导航栏显示异常
+        if (self.menu.hidden && self.videoView.isFullScreen) {
+            [self.videoView controlWhetherShowMenuView];
+        }
+        _isPauseByBackgroundMode = NO;
     }
 }
 
-- (void)dealloc {
-    [self.imageView removeObserver:self forKeyPath:@"currentAnimatedImageIndex"];
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    NSLog(@"touch then start animation image");
-    [self.imageView startAnimating];
-}
-
-
 #pragma mark - JXVideoViewOperationDelegate
-- (void)jx_videoViewDidFinishPrepare:(JXVideoView *)videoView {
-    NSLog(@"did finish prepare video");
-    
-    [self.menu setVideoDuration:videoView.totalPlaySecond];
+- (void)jx_videoViewDidFinishPlaying:(JXVideoView *)videoView {
+    [self.menu resetMenu];
+    [self.videoView makeMenuHide];
+    if (self.videoView.isFullScreen) {
+        [self.videoView exitFullScreen];
+        _statusBarIsShouldHidden = NO;
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
 }
 
 #pragma mark - JXVideoViewTimeDelegate
 - (void)jx_videoView:(JXVideoView *)videoView didPlayToSecond:(CGFloat)second {
-    [self.menu updateSliderValue:second];
+    if (_isMoveSlider == NO) {
+        [self.menu updateSliderValue:second];
+    }
 }
 
 - (void)jx_videoView:(JXVideoView *)videoView didBufferToProgress:(CGFloat)progress {
     [self.menu updateProgressViewValue:progress];
 }
 
+- (void)jx_videoViewDidLoadVideoDuration:(JXVideoView *)videoView {
+    [self.menu setVideoDuration:videoView.totalPlaySecond];
+    [self.menu setMenuTitle:@"Title"];
+}
+
+- (void)jx_videoView:(JXVideoView *)videoView didFinishedMoveToTime:(CMTime)time {
+    _isMoveSlider = NO;
+    [self.videoView makeMenuViewAutoHide];
+    if (self.videoView.isPlaying == NO) {
+        [self.menu updatePlayOrPauseButton];
+    }
+}
+
+- (void)showGesturePreviewView {
+    self.gesturePreviewView.quickSecond = self.videoView.currentPlaySpeed;
+    [self.gesturePreviewView sizeToFit];
+    self.gesturePreviewView.alpha = 0;
+    [self.videoView addSubview:self.gesturePreviewView];
+    [self.gesturePreviewView centerEqualToView:self.videoView];
+    [UIView animateWithDuration:0.3 animations:^{
+        self.gesturePreviewView.alpha = 1;
+    }];
+}
+
+- (void)hideGesturePreviewView {
+    [UIView animateWithDuration:0.4 animations:^{
+        self.gesturePreviewView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [self.gesturePreviewView removeFromSuperview];
+    }];
+}
+
+- (void)updateGesturePreView:(CGFloat)second {
+    self.gesturePreviewView.quickSecond = second;
+}
+
 #pragma mark - JXVideoViewPlayControlDelegate
+- (void)jx_videoViewShowPlayControlIndicator:(JXVideoView *)videoView {
+    _isMoveSlider = YES;
+
+    self.gesturePreviewView.quickSecond = videoView.currentPlaySecond;
+    [self.gesturePreviewView sizeToFit];
+    self.gesturePreviewView.alpha = 0;
+    [self.videoView addSubview:self.gesturePreviewView];
+    [self.gesturePreviewView centerEqualToView:videoView];
+    [UIView animateWithDuration:0.3 animations:^{
+        self.gesturePreviewView.alpha = 1;
+    }];
+}
+
+- (void)jx_videoViewHidePlayControlIndicator:(JXVideoView *)videoView {
+    [UIView animateWithDuration:0.4 animations:^{
+        self.gesturePreviewView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [self.gesturePreviewView removeFromSuperview];
+    }];
+}
+
 - (void)jx_videoView:(JXVideoView *)videoView playControlDidMoveToSecond:(CGFloat)second direction:(JXVideoViewPlayControlDirection)direction {
-    NSLog(@"quick value is %f", second);
     [self.menu updateSliderValue:second];
+    self.gesturePreviewView.quickSecond = second;
 }
 
 - (void)jx_videoViewBeTapOneTime:(JXVideoView *)videoView {
-    [self.videoView controlWhetherShowMenuView];
+    if (self.videoView.playButton.superview == nil) {
+        [self.videoView controlWhetherShowMenuView];
+    }
 }
 
 - (void)jx_videoViewBeTapDoubleTime:(JXVideoView *)videoView {
-    self.videoView.isPlaying ? [self jx_videoMenuDidClickPauseButton:self.menu] : [self jx_videoMenuDidClickPlayButton:self.menu];
+    if (self.videoView.playButton.superview == nil) {
+        self.videoView.isPlaying ? [self jx_videoMenuDidClickPauseButton:self.menu] : [self jx_videoMenuDidClickPlayButton:self.menu];
+    }
 }
+
 
 #pragma mark - JXVideoViewFullScreenDelegate
 - (void)jx_videoVidewDidFinishEnterFullScreen:(JXVideoView *)videoView {
@@ -98,23 +210,24 @@
 }
 
 - (void)jx_videoVidewDidFinishExitFullScreen:(JXVideoView *)videoView {
+    self.menu.alpha = 1;
     [self.menu hideTopView];
 }
 
 - (void)jx_videoViewLayoutSubviewsWhenExitFullScreen:(JXVideoView *)videoView {
-     _statusBarIsShouldHidden = NO;
-     [self setNeedsStatusBarAppearanceUpdate];
+    _sbStyle = UIStatusBarStyleDefault;
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)jx_videoViewLayoutSubviewsWhenEnterFullScreen:(JXVideoView *)videoView {
-     _statusBarIsShouldHidden = YES;
-     [self setNeedsStatusBarAppearanceUpdate];
+    _sbStyle = UIStatusBarStyleLightContent;
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 #pragma mark - JXVideoViewOperationButtonDelegate
 - (void)jx_videoView:(JXVideoView *)videoView didTappedPlayButton:(UIButton *)playButton {
     if (self.videoView.menuView.frame.size.height) { // 判断menu是否真的已经显示，否则不更新按钮状态
-         [self.menu updatePlayOrPauseButton];
+        [self.menu updatePlayOrPauseButton];
     }
 }
 
@@ -134,17 +247,37 @@
 }
 
 - (void)jx_videoMenuDidClickExitFullScreenButton:(JXVideoPlayMenu *)videoMenu {
+    [self.videoView makeMenuViewNotAutoHide];
+    self.menu.alpha = 0;
     [self.videoView exitFullScreen];
 }
 
 - (void)jx_videoMenuDidClickTopViewBackButton:(JXVideoPlayMenu *)videoMenu {
+    [self.videoView makeMenuViewNotAutoHide];
+    self.menu.alpha = 0;
     [self.videoView exitFullScreen];
+    [videoMenu updateFullScreenButton];
+}
+
+- (void)jx_videoMenuDidStartMoveSlider:(JXVideoPlayMenu *)videoMenu {
+    _isMoveSlider = YES;
+    [self showGesturePreviewView];
+    [self.videoView makeMenuViewNotAutoHide];
+}
+
+- (void)jx_videoMenuSliderValueChanged:(CGFloat)second {
+    [self updateGesturePreView:second];
+}
+
+- (void)jx_videoMenuDidEndMoveSlider:(JXVideoPlayMenu *)videoMenu seekValue:(CGFloat)seekValue {
+    [self hideGesturePreviewView];
+    [self.videoView moveToSecond:seekValue shouldPlay:YES];
 }
 
 #pragma mark - getter and setter
 - (JXVideoView *)videoView {
     if (_videoView == nil) {
-        CGRect rect = CGRectMake(0, 100,  [UIScreen mainScreen].bounds.size.width, 211);
+        CGRect rect = CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width, SCREEN_WIDTH * 9 / 16);
         _videoView = [[JXVideoView alloc] initWithFrame:rect];
         _videoView.backgroundColor = [UIColor blackColor];
         _videoView.operationDelegate = self;
@@ -167,16 +300,6 @@
     return _videoView;
 }
 
-- (YYAnimatedImageView *)imageView {
-    if (_imageView == nil) {
-         UIImage *apng = [YYImage imageNamed:@"uploading"];
-        _imageView = [[YYAnimatedImageView alloc] initWithImage:apng];;
-        _imageView.frame = CGRectMake(0, 400, 375, 120);
-        _imageView.autoPlayAnimatedImage = NO;
-    }
-    return _imageView;
-}
-
 - (JXVideoPlayMenu *)menu {
     if (_menu == nil) {
         _menu = [JXVideoPlayMenu new];
@@ -185,17 +308,13 @@
     return _menu;
 }
 
-- (JXAnimationButton *)animationBtn {
-    if (_animationBtn == nil) {
-        _animationBtn = [[JXAnimationButton alloc] initWithNormalImageName:@"video_pause" selectedImageName:@"video_play"];
-        _animationBtn.frame = CGRectMake(100, 550, 24, 24);
-        [_animationBtn addTarget:self action:@selector(didClickAnimationBtn) forControlEvents:UIControlEventTouchDown];
+- (JXGestureSeekProgressView *)gesturePreviewView {
+    if (_gesturePreviewView == nil) {
+        _gesturePreviewView = [JXGestureSeekProgressView new];
+        _gesturePreviewView.backgroundColor = [UIColor whiteColor];
+        _gesturePreviewView.totalSecond = self.videoView.totalPlaySecond;
     }
-    return _animationBtn;
-}
-
-- (void)didClickAnimationBtn {
-    self.animationBtn.selected = !self.animationBtn.isSelected;
+    return _gesturePreviewView;
 }
 
 #pragma mark - screen
@@ -206,4 +325,9 @@
 - (BOOL)prefersStatusBarHidden {
     return _statusBarIsShouldHidden;
 }
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return _sbStyle;
+}
+
 @end
