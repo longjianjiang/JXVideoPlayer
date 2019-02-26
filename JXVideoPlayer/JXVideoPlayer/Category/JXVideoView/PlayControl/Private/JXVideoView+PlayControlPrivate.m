@@ -23,6 +23,8 @@
     [self addGestureRecognizer:self.panGestureRecognizer];
     // ensure two tap gesture not conflict
     [self.oneTapGestureRecognizer requireGestureRecognizerToFail:self.twoTapGestureRecognizer];
+
+    //    [self addSubview:self.volumeView];
 }
 
 
@@ -42,72 +44,81 @@
 - (void)didReceivePanGesture:(UIPanGestureRecognizer *)gesture {
     if (self.shouldOnlyFullScreenSupportPlayControl == YES   &&
         self.isFullScreen == NO) {
-      return;
+        return;
     }
     if (self.prepareStatus != JXVideoViewPrepareStatusPrepareFinished) {
-      return;
+        return;
     }
-  
+
     CGPoint velocityPoint = [gesture velocityInView:self];
     CGPoint locationPoint = [gesture locationInView:self];
-    
+    JXVideoViewVertialSlideIndicatorType type = locationPoint.x > self.bounds.size.width / 2 ? JXVideoViewVertialSlideIndicatorTypeVolume : JXVideoViewVertialSlideIndicatorTypeBrightness;
+
     switch (gesture.state) {
         case UIGestureRecognizerStateBegan:{
-            
+
             CGFloat absoluteX = fabs(velocityPoint.x);
             CGFloat absoluteY = fabs(velocityPoint.y);
-            
+
             if (absoluteX > absoluteY) {
                 self.panGestureRecognizer.sliderDirection = JXUIPanGestureSlideDirectionHorizontal;
                 self.secondToMove = self.currentPlaySecond;
+                if ([self.playControlDelegate respondsToSelector:@selector(jx_videoView:hideVerticalSlideIndicatorType:)]) {
+                    [self.playControlDelegate jx_videoView:self hideVerticalSlideIndicatorType:type];
+                }
                 if ([self.playControlDelegate respondsToSelector:@selector(jx_videoViewShowPlayControlIndicator:)]) {
                     [self.playControlDelegate jx_videoViewShowPlayControlIndicator:self];
                 }
             }
-            
+
             if (absoluteY > absoluteX) {
                 self.panGestureRecognizer.sliderDirection = JXUIPanGestureSlideDirectionVertical;
                 if ([self.playControlDelegate respondsToSelector:@selector(jx_videoViewHidePlayControlIndicator:)]) {
                     [self.playControlDelegate jx_videoViewHidePlayControlIndicator:self];
                 }
+                if ([self.playControlDelegate respondsToSelector:@selector(jx_videoView:showVerticalSlideIndicatorType:)]) {
+                    [self.playControlDelegate jx_videoView:self showVerticalSlideIndicatorType:type];
+                }
             }
-            
+
             break;
         }
-        
+
         case UIGestureRecognizerStateChanged: {
-            
+
             if (gesture.sliderDirection == JXUIPanGestureSlideDirectionHorizontal) {
                 [self moveToSecondWithVelocityX:velocityPoint.x];
             }
-            
+
             if (gesture.sliderDirection == JXUIPanGestureSlideDirectionVertical) {
                 [self changeVolumeOrBrightnessWithVelocityY:velocityPoint.y
                                                    isVolume:locationPoint.x > self.bounds.size.width / 2];
             }
             break;
         }
-            
+
         case UIGestureRecognizerStateEnded: {
             if (gesture.sliderDirection == JXUIPanGestureSlideDirectionHorizontal) {
-                
+
                 if ([self.playControlDelegate respondsToSelector:@selector(jx_videoViewHidePlayControlIndicator:)]) {
                     [self.playControlDelegate jx_videoViewHidePlayControlIndicator:self];
                 }
-              
-              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self moveToSecond:self.secondToMove shouldPlay:YES];
-              });
-              
+
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self moveToSecond:self.secondToMove shouldPlay:YES];
+                });
+
             }
-            
+
             if (gesture.sliderDirection == JXUIPanGestureSlideDirectionVertical) {
-                
+                if ([self.playControlDelegate respondsToSelector:@selector(jx_videoView:hideVerticalSlideIndicatorType:)]) {
+                    [self.playControlDelegate jx_videoView:self hideVerticalSlideIndicatorType:type];
+                }
             }
-            
+
             break;
         }
-            
+
         default:
             break;
     }
@@ -119,7 +130,7 @@
     if (velocityX < 0) {
         direction = JXVideoViewPlayControlDirectionMoveBackward;
     }
-    
+
     self.secondToMove += velocityX / self.speedOfSecondToMove;
     if (self.secondToMove > self.totalPlaySecond) {
         self.secondToMove = self.totalPlaySecond;
@@ -134,9 +145,14 @@
 }
 
 - (void)changeVolumeOrBrightnessWithVelocityY:(CGFloat)velocityY isVolume:(BOOL)isVolume {
-  if (self.isPlaying) {
-    isVolume ? (self.volumeSlider.value -= velocityY / self.speedOfVolumeOrBrightnessChange) : ([UIScreen mainScreen].brightness -= velocityY / self.speedOfVolumeOrBrightnessChange);
-  }
+    JXVideoViewVertialSlideIndicatorType type = isVolume ? JXVideoViewVertialSlideIndicatorTypeVolume : JXVideoViewVertialSlideIndicatorTypeBrightness;
+    CGFloat value = isVolume ? self.volumeSlider.value - velocityY / self.speedOfVolumeOrBrightnessChange : [UIScreen mainScreen].brightness - velocityY / self.speedOfVolumeOrBrightnessChange;
+
+    isVolume ? (self.volumeSlider.value = value) : ([UIScreen mainScreen].brightness = value);
+
+    if ([self.playControlDelegate respondsToSelector:@selector(jx_videoView:verticalSliderIndicatorType:didChangeToValue:)]) {
+        [self.playControlDelegate jx_videoView:self verticalSliderIndicatorType:type didChangeToValue:value];
+    }
 }
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -145,7 +161,7 @@
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-  return ![touch.view isKindOfClass:[UISlider class]];
+    return ![touch.view isKindOfClass:[UISlider class]];
 }
 
 #pragma mark - getter and setter
@@ -164,7 +180,7 @@
         twoTapGestureRecognizer.numberOfTapsRequired = 2;
         twoTapGestureRecognizer.delegate = self;
         [twoTapGestureRecognizer setDelaysTouchesBegan:YES];
-        
+
         objc_setAssociatedObject(self, @selector(twoTapGestureRecognizer), twoTapGestureRecognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return twoTapGestureRecognizer;
@@ -177,7 +193,7 @@
         oneTapGestureRecognizer.numberOfTapsRequired = 1;
         oneTapGestureRecognizer.delegate = self;
         [oneTapGestureRecognizer setDelaysTouchesBegan:YES];
-        
+
         objc_setAssociatedObject(self, @selector(oneTapGestureRecognizer), oneTapGestureRecognizer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return oneTapGestureRecognizer;
@@ -190,10 +206,10 @@
         panGesture.maximumNumberOfTouches = 1;
         panGesture.minimumNumberOfTouches = 1;
         panGesture.delegate = self;
-        
+
         objc_setAssociatedObject(self, @selector(panGestureRecognizer), panGesture, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    
+
     return panGesture;
 }
 
@@ -211,3 +227,4 @@
     return volumeSlider;
 }
 @end
+

@@ -15,8 +15,6 @@
 - (void)initMenuView;
 - (void)deallocMenuView;
 
-- (void)makeMenuShow;
-- (void)makeMenuHide;
 - (void)controlWhetherShowMenuView;
 - (void)makeMenuViewNotAutoHide;
 - (void)makeMenuViewAutoHide;

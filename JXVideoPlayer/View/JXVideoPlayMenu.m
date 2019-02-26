@@ -61,7 +61,7 @@
 }
 
 - (void)resetMenu {
-    self.playOrPauseBtn.selected = YES;
+    self.playOrPauseBtn.selected = NO;
     self.progressView.progress = 0;
     self.fullScreenBtn.selected = NO;
 }

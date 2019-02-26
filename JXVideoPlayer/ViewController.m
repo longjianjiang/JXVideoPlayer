@@ -109,7 +109,9 @@
 #pragma mark - JXVideoViewOperationDelegate
 - (void)jx_videoViewDidFinishPlaying:(JXVideoView *)videoView {
     [self.menu resetMenu];
-    [self.videoView makeMenuHide];
+    if (!self.menu.hidden) {
+        [self.videoView controlWhetherShowMenuView];
+    }
     if (self.videoView.isFullScreen) {
         [self.videoView exitFullScreen];
         _statusBarIsShouldHidden = NO;
@@ -222,13 +224,6 @@
 - (void)jx_videoViewLayoutSubviewsWhenEnterFullScreen:(JXVideoView *)videoView {
     _sbStyle = UIStatusBarStyleLightContent;
     [self setNeedsStatusBarAppearanceUpdate];
-}
-
-#pragma mark - JXVideoViewOperationButtonDelegate
-- (void)jx_videoView:(JXVideoView *)videoView didTappedPlayButton:(UIButton *)playButton {
-    if (self.videoView.menuView.frame.size.height) { // 判断menu是否真的已经显示，否则不更新按钮状态
-        [self.menu updatePlayOrPauseButton];
-    }
 }
 
 #pragma mark - JXVideoPlayMenuDelegate

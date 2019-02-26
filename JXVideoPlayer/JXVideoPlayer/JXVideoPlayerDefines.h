@@ -36,8 +36,13 @@ typedef NS_ENUM(NSUInteger, JXVideoViewPlayControlDirection) {
 };
 
 typedef NS_ENUM(NSUInteger, JXVideoViewStalledStrategy) {
-  JXVideoViewStalledStrategyPlay,
-  JXVideoViewStalledStrategyDelegateCallback,
+    JXVideoViewStalledStrategyPlay,
+    JXVideoViewStalledStrategyDelegateCallback,
+};
+
+typedef NS_ENUM(NSUInteger, JXVideoViewVertialSlideIndicatorType) {
+    JXVideoViewVertialSlideIndicatorTypeVolume,
+    JXVideoViewVertialSlideIndicatorTypeBrightness,
 };
 
 /**********************************************************************/
@@ -111,6 +116,10 @@ typedef NS_ENUM(NSUInteger, JXVideoViewStalledStrategy) {
 - (void)jx_videoViewHidePlayControlIndicator:(JXVideoView *)videoView;
 - (void)jx_videoView:(JXVideoView *)videoView playControlDidMoveToSecond:(CGFloat)second direction:(JXVideoViewPlayControlDirection)direction;
 
+- (void)jx_videoView:(JXVideoView *)videoView showVerticalSlideIndicatorType:(JXVideoViewVertialSlideIndicatorType)type;
+- (void)jx_videoView:(JXVideoView *)videoView hideVerticalSlideIndicatorType:(JXVideoViewVertialSlideIndicatorType)type;
+- (void)jx_videoView:(JXVideoView *)videoView verticalSliderIndicatorType:(JXVideoViewVertialSlideIndicatorType)type didChangeToValue:(CGFloat)value;
+
 - (void)jx_videoViewBeTapOneTime:(JXVideoView *)videoView;
 - (void)jx_videoViewBeTapDoubleTime:(JXVideoView *)videoView;
 
@@ -118,3 +127,5 @@ typedef NS_ENUM(NSUInteger, JXVideoViewStalledStrategy) {
 
 
 #endif /* JXVideoPlayerDefines_h */
+
+
